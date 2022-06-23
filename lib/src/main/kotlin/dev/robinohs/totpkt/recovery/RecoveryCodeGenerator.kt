@@ -36,12 +36,10 @@ class RecoveryCodeGenerator(
      *
      * @return the randomly generated string of character blocks.
      */
-    fun generateSingleRecoveryCode(): String {
-        return (1..numberOfBlocks)
-            .joinToString("-") {
-                generateRandomStringOfCharacters(blockLength)
-            }
-    }
+    fun generateSingleRecoveryCode(): String = (1..numberOfBlocks)
+        .joinToString("-") {
+            generateRandomStringOfCharacters(blockLength)
+        }
 
     /**
      * Generates a list of recovery codes with a given size or default 5.
@@ -61,11 +59,8 @@ class RecoveryCodeGenerator(
      * @param length the length of the generated string.
      * @return the randomly generated string.
      */
-    private fun generateRandomStringOfCharacters(length: Int): String {
-        if (length < 1) throw IllegalArgumentException("Length must be >= 1, but was $length.")
-        return (1..length)
-            .map { Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
-    }
+    private fun generateRandomStringOfCharacters(length: Int): String = (1..length)
+        .map { Random.nextInt(0, charPool.size) }
+        .map(charPool::get)
+        .joinToString("")
 }
