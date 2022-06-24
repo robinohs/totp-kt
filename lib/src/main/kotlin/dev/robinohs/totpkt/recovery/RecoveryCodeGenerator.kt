@@ -1,6 +1,6 @@
 package dev.robinohs.totpkt.recovery
 
-import kotlin.random.Random
+import dev.robinohs.totpkt.utils.RandomUtils
 
 /**
  * @author : Robin Ohs
