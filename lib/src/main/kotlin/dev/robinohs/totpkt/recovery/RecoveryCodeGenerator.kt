@@ -38,7 +38,7 @@ class RecoveryCodeGenerator(
      */
     fun generateSingleRecoveryCode(): String = (1..numberOfBlocks)
         .joinToString("-") {
-            generateRandomStringOfCharacters(blockLength)
+            RandomUtils.generateRandomStringFromCharPool(blockLength, charPool)
         }
 
     /**
@@ -52,15 +52,4 @@ class RecoveryCodeGenerator(
         return (1..number)
             .map { generateSingleRecoveryCode() }
     }
-
-    /**
-     * Creates a randomly generated string with characters from the character pool.
-     *
-     * @param length the length of the generated string.
-     * @return the randomly generated string.
-     */
-    private fun generateRandomStringOfCharacters(length: Int): String = (1..length)
-        .map { Random.nextInt(0, charPool.size) }
-        .map(charPool::get)
-        .joinToString("")
 }
