@@ -1,6 +1,7 @@
-package dev.robinohs.totpkt.utils
+package dev.robinohs.totpkt.random
 
 import java.util.*
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -9,49 +10,56 @@ import kotlin.test.assertEquals
  * @created : 24.06.2022
  * @since : 0.0.1
  */
-internal class RandomUtilsTest {
+internal class RandomGeneratorTest {
+
+    private lateinit var cut: RandomGenerator
+
+    @BeforeTest
+    fun init() {
+        cut = RandomGenerator()
+    }
 
     @Test(expected = IllegalArgumentException::class)
     fun `generateRandomStringFromCharPool throws an IllegalArgumentException for a negative length argument`() {
-        RandomUtils.generateRandomStringFromCharPool(-1, listOf('A', 'B'))
+        cut.charPool = listOf('A', 'B')
+        cut.generateRandomStringFromCharPool(-1)
     }
 
     @Test
     fun `generateRandomStringFromCharPool generates the empty string for a length of 0`() {
+        cut.charPool = listOf('A', 'B')
         val expected = ""
 
-        val actual = RandomUtils.generateRandomStringFromCharPool(0, listOf('A', 'B'))
+        val actual = cut.generateRandomStringFromCharPool(0)
 
         assertEquals(expected, actual, "The string was not as expected an empty string.")
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun `generateRandomStringFromCharPool throws an IllegalArgumentException for an empty char pool`() {
-        RandomUtils.generateRandomStringFromCharPool(5, listOf())
+        cut.charPool = listOf()
+
+        cut.generateRandomStringFromCharPool(5)
     }
 
     @Test
     fun `generateRandomStringFromCharPool uses random generated numbers as expected`() {
+        cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
+        cut.random = Random(55)
         val expected = "HBHBIICD"
 
-        val actual = RandomUtils.generateRandomStringFromCharPool(
-            8,
-            listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'),
-            random = Random(55)
-        )
+        val actual = cut.generateRandomStringFromCharPool(8)
 
         assertEquals(expected, actual, "The string was not taken from the charpool as expected.")
     }
 
     @Test
     fun `generateRandomStringFromCharPool uses random generated numbers as expected with another seed`() {
+        cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
+        cut.random = Random(555)
         val expected = "DFHIBGIC"
 
-        val actual = RandomUtils.generateRandomStringFromCharPool(
-            8,
-            listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'),
-            random = Random(555)
-        )
+        val actual = cut.generateRandomStringFromCharPool(8)
 
         assertEquals(expected, actual, "The string was not taken from the charpool as expected.")
     }

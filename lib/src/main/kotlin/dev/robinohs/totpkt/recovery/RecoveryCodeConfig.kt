@@ -11,5 +11,4 @@ object RecoveryCodeConfig {
     const val DEFAULT_NUMBER_OF_BLOCKS: Int = 6
     const val DEFAULT_LENGTH_OF_BLOCK: Int = 5
     const val DEFAULT_NUMBER_OF_RECOVERY_CODES: Int = 5
-    val DEFAULT_CHARPOOL: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 }

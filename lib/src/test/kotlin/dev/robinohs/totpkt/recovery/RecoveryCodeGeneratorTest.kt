@@ -1,5 +1,6 @@
 package dev.robinohs.totpkt.recovery
 
+import dev.robinohs.totpkt.random.RandomGenerator
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_LENGTH_OF_BLOCK
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS
 import kotlin.test.BeforeTest
@@ -19,11 +20,6 @@ internal class RecoveryCodeGeneratorTest {
     @BeforeTest
     fun init() {
         cut = RecoveryCodeGenerator()
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `RecoveryCodeGenerator charpool cannot be set to an empty list`() {
-        cut.charPool = listOf()
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -92,7 +88,7 @@ internal class RecoveryCodeGeneratorTest {
     @Test
     fun `generateSingleRecoveryCode uses correct charset with changed values`() {
         val charPool = listOf('A', 'B', 'C', 'D')
-        cut.charPool = charPool
+        cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
         val actual = cut.generateSingleRecoveryCode()
@@ -154,7 +150,7 @@ internal class RecoveryCodeGeneratorTest {
     @Test
     fun `generateRecoveryCodes creates recovery codes with characters from the changed char pool`() {
         val charPool = listOf('A', 'B', 'C', 'D')
-        cut.charPool = charPool
+        cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
         val recoveryCodes = cut.generateRecoveryCodes()

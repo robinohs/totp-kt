@@ -1,6 +1,6 @@
 package dev.robinohs.totpkt.recovery
 
-import dev.robinohs.totpkt.utils.RandomUtils
+import dev.robinohs.totpkt.random.RandomGenerator
 
 /**
  * @author : Robin Ohs
@@ -10,7 +10,7 @@ import dev.robinohs.totpkt.utils.RandomUtils
 class RecoveryCodeGenerator(
     numberOfBlocks: Int = RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS,
     blockLength: Int = RecoveryCodeConfig.DEFAULT_LENGTH_OF_BLOCK,
-    charPool: List<Char> = RecoveryCodeConfig.DEFAULT_CHARPOOL
+    var randomGenerator: RandomGenerator = RandomGenerator()
 ) {
     var numberOfBlocks = numberOfBlocks
         set(value) {
@@ -24,12 +24,6 @@ class RecoveryCodeGenerator(
             field = value
         }
 
-    var charPool = charPool
-        set(value) {
-            if (value.isEmpty()) throw IllegalArgumentException("Char pool must not be empty.")
-            field = value
-        }
-
     /**
      * Creates a randomly generated string from characters of the charPool and puts it into block form.
      * E.g., AAAA-BBBB-CCCC-DDDD for numberOfBlocks 4 and blockLength 4
@@ -38,7 +32,7 @@ class RecoveryCodeGenerator(
      */
     fun generateSingleRecoveryCode(): String = (1..numberOfBlocks)
         .joinToString("-") {
-            RandomUtils.generateRandomStringFromCharPool(blockLength, charPool)
+            randomGenerator.generateRandomStringFromCharPool(blockLength)
         }
 
     /**
