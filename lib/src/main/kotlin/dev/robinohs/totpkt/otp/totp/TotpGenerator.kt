@@ -44,15 +44,20 @@ class TotpGenerator(
      */
     fun isCodeValidWithTolerance(secret: ByteArray, givenCode: String): Boolean {
         val timestamp = Instant.now(clock)
-        val validToken = mutableSetOf<String>()
         val toleranceLowerBound = timestamp.minus(tolerance)
-        var iteratingTimestamp = timestamp
-        while (iteratingTimestamp.isAfter(toleranceLowerBound) || iteratingTimestamp == toleranceLowerBound) {
-            val currentBeginning = computeTimeslotBeginning(iteratingTimestamp.toEpochMilli())
-            validToken.add(generateCode(secret, currentBeginning))
-            iteratingTimestamp = iteratingTimestamp.minusMillis(1L)
-        }
+        val validToken = getCodesInInterval(secret, toleranceLowerBound.toEpochMilli(), timestamp.toEpochMilli())
         return givenCode in validToken
+    }
+
+    private fun getCodesInInterval(secret: ByteArray, start: Long, end: Long): Set<String> {
+        val validToken = mutableSetOf<String>()
+        var iteratingTimestamp = computeTimeslotBeginning(start)
+        val endSlotBeginning = computeTimeslotBeginning(end)
+        while (iteratingTimestamp <= endSlotBeginning) {
+            validToken.add(generateCode(secret, iteratingTimestamp))
+            iteratingTimestamp += timePeriod.toMillis()
+        }
+        return validToken
     }
 
     override fun generateCode(secret: ByteArray, counter: Long): String {

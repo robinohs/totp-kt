@@ -127,7 +127,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired and in extended tolerance(Tolerance is greater than time period)`() {
+    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
         cut.tolerance = Duration.ofSeconds(50)
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656118534840), ZoneId.systemDefault())
 
@@ -137,6 +137,22 @@ internal class TotpGeneratorTest {
         val actual4 = cut.isCodeValidWithTolerance(secret, "110215")
 
         assertFalse(actual1, "Code1 should not be valid but was.")
+        assertTrue(actual2, "Code2 should be valid but was not.")
+        assertTrue(actual3, "Code3 should be valid but was not.")
+        assertTrue(actual4, "Code4 should be valid but was not.")
+    }
+
+    @Test
+    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
+        cut.tolerance = Duration.ofSeconds(95)
+        cut.clock = Clock.fixed(Instant.ofEpochMilli(1656118534840), ZoneId.systemDefault())
+
+        val actual1 = cut.isCodeValidWithTolerance(secret, "956804")
+        val actual2 = cut.isCodeValidWithTolerance(secret, "364536")
+        val actual3 = cut.isCodeValidWithTolerance(secret, "326491")
+        val actual4 = cut.isCodeValidWithTolerance(secret, "110215")
+
+        assertTrue(actual1, "Code1 should be valid but was not.")
         assertTrue(actual2, "Code2 should be valid but was not.")
         assertTrue(actual3, "Code3 should be valid but was not.")
         assertTrue(actual4, "Code4 should be valid but was not.")
