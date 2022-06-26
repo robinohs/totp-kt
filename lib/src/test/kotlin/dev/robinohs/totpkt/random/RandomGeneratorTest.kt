@@ -1,9 +1,7 @@
 package dev.robinohs.totpkt.random
 
+import org.junit.jupiter.api.*
 import java.util.*
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 /**
  * @author : Robin Ohs
@@ -14,15 +12,22 @@ internal class RandomGeneratorTest {
 
     private lateinit var cut: RandomGenerator
 
-    @BeforeTest
+    @BeforeEach
     fun init() {
         cut = RandomGenerator()
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `generateRandomStringFromCharPool throws an IllegalArgumentException for a negative length argument`() {
-        cut.charPool = listOf('A', 'B')
-        cut.generateRandomStringFromCharPool(-1)
+    @TestFactory
+    fun `generateRandomStringFromCharPool throws an IllegalArgumentException for a negative length argument`() = listOf(
+        -1,
+        -5,
+        -55
+    ).map {
+        DynamicTest.dynamicTest("input $it should throw an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.generateRandomStringFromCharPool(it)
+            }
+        }
     }
 
     @Test
@@ -32,14 +37,16 @@ internal class RandomGeneratorTest {
 
         val actual = cut.generateRandomStringFromCharPool(0)
 
-        assertEquals(expected, actual, "The string was not as expected an empty string.")
+        Assertions.assertEquals(expected, actual) {
+            "The string was not as expected an empty string."
+        }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun `generateRandomStringFromCharPool throws an IllegalArgumentException for an empty char pool`() {
-        cut.charPool = listOf()
-
-        cut.generateRandomStringFromCharPool(5)
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            cut.charPool = listOf()
+        }
     }
 
     @Test
@@ -50,7 +57,9 @@ internal class RandomGeneratorTest {
 
         val actual = cut.generateRandomStringFromCharPool(8)
 
-        assertEquals(expected, actual, "The string was not taken from the charpool as expected.")
+        Assertions.assertEquals(expected, actual) {
+            "The string was not taken from the charpool as expected."
+        }
     }
 
     @Test
@@ -61,6 +70,8 @@ internal class RandomGeneratorTest {
 
         val actual = cut.generateRandomStringFromCharPool(8)
 
-        assertEquals(expected, actual, "The string was not taken from the charpool as expected.")
+        Assertions.assertEquals(expected, actual) {
+            "The string was not taken from the charpool as expected."
+        }
     }
 }
