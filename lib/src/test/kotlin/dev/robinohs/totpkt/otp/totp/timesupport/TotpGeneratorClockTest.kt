@@ -15,7 +15,7 @@ import java.time.ZoneId
 /**
  * @author : Robin Ohs
  * @created : 26.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 internal class TotpGeneratorClockTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()

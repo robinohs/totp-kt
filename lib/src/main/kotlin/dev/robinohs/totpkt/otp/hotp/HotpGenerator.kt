@@ -15,7 +15,7 @@ import kotlin.math.pow
  *
  * @author : Robin Ohs
  * @created : 24.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 open class HotpGenerator(
     open var randomGenerator: RandomGenerator = RandomGenerator(),

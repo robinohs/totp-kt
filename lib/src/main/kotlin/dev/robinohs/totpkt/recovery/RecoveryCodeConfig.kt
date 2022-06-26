@@ -5,7 +5,7 @@ package dev.robinohs.totpkt.recovery
  *
  * @author : Robin Ohs
  * @created : 24.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 object RecoveryCodeConfig {
     const val DEFAULT_NUMBER_OF_BLOCKS: Int = 6

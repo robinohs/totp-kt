@@ -3,7 +3,7 @@ package dev.robinohs.totpkt.otp
 /**
  * @author : Robin Ohs
  * @created : 24.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 interface OtpGenerator {
 

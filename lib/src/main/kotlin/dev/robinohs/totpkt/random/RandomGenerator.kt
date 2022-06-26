@@ -6,7 +6,7 @@ import java.util.*
 /**
  * @author : Robin Ohs
  * @created : 24.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 class RandomGenerator(
     charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9'),

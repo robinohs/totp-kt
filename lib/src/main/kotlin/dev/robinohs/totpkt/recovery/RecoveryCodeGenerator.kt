@@ -5,7 +5,7 @@ import dev.robinohs.totpkt.random.RandomGenerator
 /**
  * @author : Robin Ohs
  * @created : 23.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 class RecoveryCodeGenerator(
     numberOfBlocks: Int = RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS,

@@ -11,7 +11,7 @@ import java.util.*
 /**
  * @author : Robin Ohs
  * @created : 24.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 internal class HotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
