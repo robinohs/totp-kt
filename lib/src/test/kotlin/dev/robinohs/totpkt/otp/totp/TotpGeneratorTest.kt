@@ -90,8 +90,8 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun `generateCode produces 8 digit long codes if codeLength is changed to it`() {
-        val expected = 8
+    fun `generateCode produces 6 digit long codes if codeLength is changed to it`() {
+        val expected = "316152"
 
         val actual1 = cut.generateCode(secret, 1656114883887)
         val actual2 = cut.generateCode(secret, 1656114891677)
