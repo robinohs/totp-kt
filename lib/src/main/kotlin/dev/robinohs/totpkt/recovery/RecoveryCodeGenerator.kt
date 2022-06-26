@@ -36,7 +36,7 @@ class RecoveryCodeGenerator(
         }
 
     /**
-     * Generates a list of recovery codes with a given size or default 5.
+     * Generates a list of recovery codes with a given size or default number.
      *
      * @param number optional param to specify the number of generated recovery codes (Default=5).
      * @throws IllegalArgumentException if the number of codes is negative.

@@ -54,41 +54,45 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
-    @Test
-    fun `generateSingleRecoveryCode has correct length with default values`() {
-        val expected = DEFAULT_NUMBER_OF_BLOCKS * DEFAULT_LENGTH_OF_BLOCK + (DEFAULT_NUMBER_OF_BLOCKS - 1)
+    @TestFactory
+    fun `generateSingleRecoveryCode returns a code with correct length`() = mapOf(
+        DEFAULT_NUMBER_OF_BLOCKS to DEFAULT_LENGTH_OF_BLOCK,
+        10 to 8,
+        12 to 5,
+        4 to 9,
+        1 to 1,
+    ).map { (numberOfBlocks, blockLength) ->
+        DynamicTest.dynamicTest("code generated from $numberOfBlocks blocks with a length of $blockLength has wrong length") {
+            cut.numberOfBlocks = numberOfBlocks
+            cut.blockLength = blockLength
+            val expected = numberOfBlocks * blockLength + (numberOfBlocks - 1)
 
-        val actual = cut.generateSingleRecoveryCode().length
+            val actual = cut.generateSingleRecoveryCode().length
 
-        Assertions.assertEquals(expected, actual) {
-            "The recovery code was not as long as expected."
+            Assertions.assertEquals(expected, actual) {
+                "The recovery code was not as long as expected."
+            }
         }
     }
 
-    @Test
-    fun `generateSingleRecoveryCode has correct format and charset with changed values`() {
-        cut.numberOfBlocks = 10
-        cut.blockLength = 8
-        val expectedFormatRegex = "[A-z\\d]{8}((-[A-z\\d]{8})+)?".toRegex()
+    @TestFactory
+    fun `generateSingleRecoveryCode has correct format and charset with changed block values`() = mapOf(
+        DEFAULT_NUMBER_OF_BLOCKS to DEFAULT_LENGTH_OF_BLOCK,
+        10 to 8,
+        12 to 5,
+        4 to 9,
+        1 to 1,
+    ).map { (numberOfBlocks, blockLength) ->
+        DynamicTest.dynamicTest("code generated from $numberOfBlocks blocks with a length of $blockLength has wrong format") {
+            val expectedFormatRegex = "[A-z\\d]{$blockLength}((-[A-z\\d]{$blockLength})+)?".toRegex()
+            cut.numberOfBlocks = numberOfBlocks
+            cut.blockLength = blockLength
 
-        val actual = cut.generateSingleRecoveryCode()
+            val actual = cut.generateSingleRecoveryCode()
 
-        val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        Assertions.assertTrue(doesRegexMatch) {
-            "Format was not matched by regex but should."
-        }
-    }
-
-    @Test
-    fun `generateSingleRecoveryCode has correct length with changed values`() {
-        cut.numberOfBlocks = 10
-        cut.blockLength = 8
-        val expected = 10 * 8 + (10 - 1)
-
-        val actual = cut.generateSingleRecoveryCode().length
-
-        Assertions.assertEquals(expected, actual) {
-            "The recovery code was not as long as expected."
+            Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
+                "Format was not matched by regex but should."
+            }
         }
     }
 
@@ -128,14 +132,15 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
-    @Test
-    fun `generateRecoveryCodes creates the given number of recovery codes`() {
-        val expectedNumber = 15
-
-        val actualNumber = cut.generateRecoveryCodes(15).size
-
-        Assertions.assertEquals(expectedNumber, actualNumber) {
-            "The number of generated recovery codes was wrong."
+    @TestFactory
+    fun `generateRecoveryCodes creates the given number of recovery codes`() = listOf(
+        0, 5, 10, 12
+    ).map { expected ->
+        DynamicTest.dynamicTest("did not generate $expected codes") {
+            val actual = cut.generateRecoveryCodes(expected).size
+            Assertions.assertEquals(expected, actual) {
+                "The number of generated recovery codes was wrong."
+            }
         }
     }
 
