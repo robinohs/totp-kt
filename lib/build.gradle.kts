@@ -32,6 +32,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
     //testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api("org.apache.commons:commons-math3:3.6.1")
@@ -48,3 +49,6 @@ java {
     withSourcesJar()
 }
 
+tasks.test {
+    useJUnitPlatform()
+}

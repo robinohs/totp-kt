@@ -2,8 +2,13 @@ package dev.robinohs.totpkt.otp.hotp
 
 import dev.robinohs.totpkt.random.RandomGenerator
 import org.apache.commons.codec.binary.Base32
+import org.junit.jupiter.api.function.Executable
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import java.util.*
-import kotlin.test.*
 
 /**
  * @author : Robin Ohs
@@ -12,9 +17,10 @@ import kotlin.test.*
  */
 internal class HotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
+    private val secret2 = "BJAU CQSB IJAU EQKB".toByteArray()
     private lateinit var cut: HotpGenerator
 
-    @BeforeTest
+    @BeforeEach
     fun init() {
         val randomGenerator = RandomGenerator(
             charPool = listOf('A', 'B'),
@@ -23,21 +29,18 @@ internal class HotpGeneratorTest {
         cut = HotpGenerator(randomGenerator)
     }
 
-    @Test
-    fun `generateSecret produces random values and encodes them to base32`() {
-        // these are the generated strings with the given seed for the length encoded to base32 with another tool
-        val expectedOutputs = sortedMapOf(
-            10 to "IJAUCQSBIJAUEQKB",
-            20 to "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSC",
-            30 to "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
-            40 to "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB"
-        )
+    @ParameterizedTest
+    @CsvSource(
+        "10, IJAUCQSBIJAUEQKB",
+        "20, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSC",
+        "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
+        "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
+    )
+    fun `generateSecret produces random values and encodes them to base32`(length: Int, expected: String) {
+        val actual = cut.generateSecret(length).toString(Charsets.UTF_8)
 
-        for ((length, expected) in expectedOutputs) {
-            val actual = cut.generateSecret(length).toString(Charsets.UTF_8)
-            init()
-
-            assertEquals(expected, actual, "The generated secret was not encoded to the correct value.")
+        Assertions.assertEquals(expected, actual) {
+            "The generated secret was not encoded to the correct value."
         }
     }
 
@@ -47,7 +50,9 @@ internal class HotpGeneratorTest {
 
         val actual = cut.generateCode(Base32().decode(secret), 1656090712)
 
-        assertEquals(expected, actual, "Code was not the expected one.")
+        Assertions.assertEquals(expected, actual) {
+            "Code was not the expected one."
+        }
     }
 
     @Test
@@ -55,7 +60,19 @@ internal class HotpGeneratorTest {
         val first = cut.generateCode(Base32().decode(secret), 1656090713)
         val second = cut.generateCode(Base32().decode(secret), 1656090714)
 
-        assertNotEquals(first, second, "Codes should not be the same for the given arguments.")
+        Assertions.assertNotEquals(first, second) {
+            "Codes should not be the same for the given arguments."
+        }
+    }
+
+    @Test
+    fun `generateCode produces 6 digit long codes with different secrets`() {
+        val first = cut.generateCode(Base32().decode(secret), 1656090713)
+        val second = cut.generateCode(Base32().decode(secret2), 1656090713)
+
+        Assertions.assertNotEquals(first, second) {
+            "Codes should not be the same for two different secrets."
+        }
     }
 
     @Test
@@ -63,7 +80,10 @@ internal class HotpGeneratorTest {
         val actual1 = cut.isCodeValid(secret, 55203835, "196157")
         val actual2 = cut.isCodeValid(secret, 55203835, "355908")
 
-        assertTrue(actual1, "First code should be valid but was not.")
-        assertFalse(actual2, "Second code should not be valid but was.")
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
+            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+        )
     }
+
 }

@@ -48,8 +48,7 @@ internal class RecoveryCodeGeneratorTest {
 
         val actual = cut.generateSingleRecoveryCode()
 
-        val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        Assertions.assertTrue(doesRegexMatch) {
+        Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
             "Format was not matched by regex but should."
         }
     }
@@ -104,8 +103,7 @@ internal class RecoveryCodeGeneratorTest {
 
         val actual = cut.generateSingleRecoveryCode()
 
-        val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        Assertions.assertTrue(doesRegexMatch) {
+        Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
             "Not all characters were taken from the expected set $charPool."
         }
     }
@@ -138,6 +136,7 @@ internal class RecoveryCodeGeneratorTest {
     ).map { expected ->
         DynamicTest.dynamicTest("did not generate $expected codes") {
             val actual = cut.generateRecoveryCodes(expected).size
+
             Assertions.assertEquals(expected, actual) {
                 "The number of generated recovery codes was wrong."
             }
@@ -151,8 +150,7 @@ internal class RecoveryCodeGeneratorTest {
 
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("format of $it was not as expected") {
-                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
-                Assertions.assertTrue(doesRegexMatch) {
+                Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
                     "Format was not matched by regex but should."
                 }
             }
@@ -167,8 +165,7 @@ internal class RecoveryCodeGeneratorTest {
 
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("format of $it was not as expected") {
-                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
-                Assertions.assertTrue(doesRegexMatch) {
+                Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
                     "Format was not matched by regex but should."
                 }
             }
@@ -183,8 +180,7 @@ internal class RecoveryCodeGeneratorTest {
 
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("not all characters of $it came from the charpool") {
-                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
-                Assertions.assertTrue(doesRegexMatch) {
+                Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
                     "Format was not matched by regex but should."
                 }
             }

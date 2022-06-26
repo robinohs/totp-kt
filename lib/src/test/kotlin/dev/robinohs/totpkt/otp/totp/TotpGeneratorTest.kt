@@ -1,11 +1,16 @@
 package dev.robinohs.totpkt.otp.totp
 
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.function.Executable
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 /**
  * @author : Robin Ohs
@@ -14,6 +19,7 @@ import kotlin.test.*
  */
 internal class TotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
+    private val secret2 = "BJAU CQSB IJAU EQKB".toByteArray()
 
     private lateinit var cut: TotpGenerator
 
@@ -29,8 +35,24 @@ internal class TotpGeneratorTest {
         val actual1 = cut.generateCode(secret, 1656114883887)
         val actual2 = cut.generateCode(secret, 1656114891677)
 
-        assertEquals(expected, actual1, "First code was not the expected one.")
-        assertEquals(expected, actual2, "Second code was not the expected one.")
+        Assertions.assertAll(
+            Executable { Assertions.assertEquals(expected, actual1) { "First code was not the expected one." } },
+            Executable { Assertions.assertEquals(expected, actual2) { "Second code was not the expected one." } },
+        )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1656114887817",
+        "1658144883447",
+        "1666314881887",
+        "1696114888827",
+    )
+    fun `generateCode produces different codes with different secrets for same timestamp`(timestamp: Long) {
+        val actual1 = cut.generateCode(secret, timestamp)
+        val actual2 = cut.generateCode(secret2, timestamp)
+
+        Assertions.assertNotEquals(actual1, actual2) { "Codes should be different but were equal." }
     }
 
     @Test
@@ -40,8 +62,24 @@ internal class TotpGeneratorTest {
         val actual1 = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(1656114738767)))
         val actual2 = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(1656114742133)))
 
-        assertEquals(expected, actual1, "First code was not the expected one.")
-        assertEquals(expected, actual2, "Second code was not the expected one.")
+        Assertions.assertAll(
+            Executable { Assertions.assertEquals(expected, actual1) { "First code was not the expected one." } },
+            Executable { Assertions.assertEquals(expected, actual2) { "Second code was not the expected one." } },
+        )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1656114887817",
+        "1658144883447",
+        "1666314881887",
+        "1696114888827",
+    )
+    fun `generateCode produces different codes with different secrets for same date`(timestamp: Long) {
+        val actual1 = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(timestamp)))
+        val actual2 = cut.generateCode(secret2, Date.from(Instant.ofEpochMilli(timestamp)))
+
+        Assertions.assertNotEquals(actual1, actual2) { "Codes should be different but were equal." }
     }
 
     @Test
@@ -51,8 +89,24 @@ internal class TotpGeneratorTest {
         val actual1 = cut.generateCode(secret, Instant.ofEpochMilli(1656114819820))
         val actual2 = cut.generateCode(secret, Instant.ofEpochMilli(1656114826576))
 
-        assertEquals(expected, actual1, "First code was not the expected one.")
-        assertEquals(expected, actual2, "Second code was not the expected one.")
+        Assertions.assertAll(
+            Executable { Assertions.assertEquals(expected, actual1) { "First code was not the expected one." } },
+            Executable { Assertions.assertEquals(expected, actual2) { "Second code was not the expected one." } },
+        )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1656114887817",
+        "1658144883447",
+        "1666314881887",
+        "1696114888827",
+    )
+    fun `generateCode produces different codes with different secrets for same instant`(timestamp: Long) {
+        val actual1 = cut.generateCode(secret, Instant.ofEpochMilli(timestamp))
+        val actual2 = cut.generateCode(secret2, Instant.ofEpochMilli(timestamp))
+
+        Assertions.assertNotEquals(actual1, actual2) { "Codes should be different but were equal." }
     }
 
     @Test
@@ -66,9 +120,11 @@ internal class TotpGeneratorTest {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115777419), ZoneId.systemDefault())
         val actual3 = cut.generateCode(secret)
 
-        assertEquals(actual1, expected, "First code was not the expected one.")
-        assertEquals(actual2, expected, "Second code was not the expected one.")
-        assertNotEquals(actual3, expected, "Second code was not the expected one.")
+        Assertions.assertAll(
+            Executable { Assertions.assertEquals(expected, actual1) { "First code was not the expected code." } },
+            Executable { Assertions.assertEquals(expected, actual2) { "Second code was not the expected code." } },
+            Executable { Assertions.assertNotEquals(expected, actual3) { "Second code should not be equal to the expected one." } },
+        )
     }
 
     @Test
@@ -76,19 +132,46 @@ internal class TotpGeneratorTest {
         val actual1 = cut.isCodeValid(secret, 1656115068732, "196157")
         val actual2 = cut.isCodeValid(secret, 1656115073318, "355908")
 
-        assertTrue(actual1, "First code should be valid but was not.")
-        assertFalse(actual2, "Second code should not be valid but was.")
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
+            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+        )
     }
 
     @Test
-    fun `isCodeValid checks codes correctly by taking the timestamp itself`() {
+    fun `isCodeValid checks codes correctly with different secrets for given timestamps`() {
+        val actual1 = cut.isCodeValid(secret, 1656115068732, "196157")
+        val actual2 = cut.isCodeValid(secret2, 1656115073318, "196157")
+
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
+            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+        )
+    }
+
+    @Test
+    fun `isCodeValid checks codes correctly without time argument`() {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115068732), ZoneId.systemDefault())
         val actual1 = cut.isCodeValid(secret, "196157")
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115073318), ZoneId.systemDefault())
         val actual2 = cut.isCodeValid(secret, "355908")
 
-        assertTrue(actual1, "First code should be valid but was not.")
-        assertFalse(actual2, "Second code should not be valid but was.")
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
+            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+        )
+    }
+
+    @Test
+    fun `isCodeValid checks codes correctly with different secrets without time argument`() {
+        cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115068732), ZoneId.systemDefault())
+        val actual1 = cut.isCodeValid(secret, "196157")
+        val actual2 = cut.isCodeValid(secret2, "196157")
+
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
+            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+        )
     }
 
     @Test
@@ -96,7 +179,7 @@ internal class TotpGeneratorTest {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115068732), ZoneId.systemDefault())
         val actual = cut.isCodeValidWithTolerance(secret, "196157")
 
-        assertTrue(actual, "Code should be valid but was not.")
+        Assertions.assertTrue(actual) { "Code should be valid but was not." }
     }
 
     @Test
@@ -104,7 +187,7 @@ internal class TotpGeneratorTest {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656116160719), ZoneId.systemDefault())
         val actual = cut.isCodeValidWithTolerance(secret, "853702")
 
-        assertTrue(actual, "Code should be valid but was not.")
+        Assertions.assertTrue(actual) { "Code should be valid but was not." }
     }
 
     @Test
@@ -113,7 +196,7 @@ internal class TotpGeneratorTest {
 
         val actual = cut.isCodeValidWithTolerance(secret, "452088")
 
-        assertFalse(actual, "Code should not be valid but was.")
+        Assertions.assertFalse(actual) { "Code should not be valid but was." }
     }
 
     @Test
@@ -123,7 +206,7 @@ internal class TotpGeneratorTest {
 
         val actual = cut.isCodeValidWithTolerance(secret, "452088")
 
-        assertTrue(actual, "Code should not be valid but was.")
+        Assertions.assertTrue(actual) { "Code should not be valid but was." }
     }
 
     @Test
@@ -136,10 +219,12 @@ internal class TotpGeneratorTest {
         val actual3 = cut.isCodeValidWithTolerance(secret, "326491")
         val actual4 = cut.isCodeValidWithTolerance(secret, "110215")
 
-        assertFalse(actual1, "Code1 should not be valid but was.")
-        assertTrue(actual2, "Code2 should be valid but was not.")
-        assertTrue(actual3, "Code3 should be valid but was not.")
-        assertTrue(actual4, "Code4 should be valid but was not.")
+        Assertions.assertAll(
+            Executable { Assertions.assertFalse(actual1) { "Code1 was valid but should not." } },
+            Executable { Assertions.assertTrue(actual2) { "Code2 should be valid but was not." } },
+            Executable { Assertions.assertTrue(actual3) { "Code3 should be valid but was not." } },
+            Executable { Assertions.assertTrue(actual4) { "Code4 should be valid but was not." } }
+        )
     }
 
     @Test
@@ -152,9 +237,11 @@ internal class TotpGeneratorTest {
         val actual3 = cut.isCodeValidWithTolerance(secret, "326491")
         val actual4 = cut.isCodeValidWithTolerance(secret, "110215")
 
-        assertTrue(actual1, "Code1 should be valid but was not.")
-        assertTrue(actual2, "Code2 should be valid but was not.")
-        assertTrue(actual3, "Code3 should be valid but was not.")
-        assertTrue(actual4, "Code4 should be valid but was not.")
+        Assertions.assertAll(
+            Executable { Assertions.assertTrue(actual1) { "Code1 should be valid but was not." } },
+            Executable { Assertions.assertTrue(actual2) { "Code2 should be valid but was not." } },
+            Executable { Assertions.assertTrue(actual3) { "Code3 should be valid but was not." } },
+            Executable { Assertions.assertTrue(actual4) { "Code4 should be valid but was not." } }
+        )
     }
 }
