@@ -1,22 +1,22 @@
-version = "1.0.1"
+description = ""
+group = "dev.robinohs"
+version = "1.0.2"
 
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.5.31"
-
-    //
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
     id("jacoco")
     id("org.sonarqube") version "3.3"
+    id("java-library")
+    id("maven-publish")
+}
 
-    // Apply the java-library plugin for API and implementation separation.
-    `java-library`
-    `maven-publish`
+repositories {
+    mavenCentral()
 }
 
 dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     implementation("commons-codec:commons-codec:1.15")
 
@@ -35,11 +35,30 @@ java {
     withSourcesJar()
 }
 
-tasks.test {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
+tasks {
+    test {
+        useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
+    }
+    jacocoTestReport {
+        dependsOn(test)
+    }
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
 
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group as String
+            artifactId = "totpkt"
+            version = project.version as String
+
+            from(components["java"])
+        }
+    }
 }
