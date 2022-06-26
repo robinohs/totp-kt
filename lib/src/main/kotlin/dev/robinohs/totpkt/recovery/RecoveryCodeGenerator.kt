@@ -39,11 +39,11 @@ class RecoveryCodeGenerator(
      * Generates a list of recovery codes with a given size or default 5.
      *
      * @param number optional param to specify the number of generated recovery codes (Default=5).
+     * @throws IllegalArgumentException if the number of codes is negative.
      * @return the list of randomly generated recovery codes.
      */
     fun generateRecoveryCodes(number: Int = RecoveryCodeConfig.DEFAULT_NUMBER_OF_RECOVERY_CODES): List<String> {
         if (number < 0) throw IllegalArgumentException("Number must be >= 0, but was $number.")
-        return (1..number)
-            .map { generateSingleRecoveryCode() }
+        return (1..number).map { generateSingleRecoveryCode() }
     }
 }

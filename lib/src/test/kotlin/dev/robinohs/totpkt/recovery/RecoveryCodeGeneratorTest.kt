@@ -3,10 +3,7 @@ package dev.robinohs.totpkt.recovery
 import dev.robinohs.totpkt.random.RandomGenerator
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_LENGTH_OF_BLOCK
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.*
 
 /**
  * @author : Robin Ohs
@@ -17,29 +14,31 @@ internal class RecoveryCodeGeneratorTest {
 
     private lateinit var cut: RecoveryCodeGenerator
 
-    @BeforeTest
+    @BeforeEach
     fun init() {
         cut = RecoveryCodeGenerator()
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `RecoveryCodeGenerator number of blocks cannot be set to 0`() {
-        cut.numberOfBlocks = 0
+    @TestFactory
+    fun `RecoveryCodeGenerator number of blocks cannot be set to 0 or a negative number`() = listOf(
+        -55, -1, 0
+    ).map {
+        DynamicTest.dynamicTest("setting numberOfBlocks to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.numberOfBlocks = it
+            }
+        }
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `RecoveryCodeGenerator number of blocks cannot be set to a negative number`() {
-        cut.numberOfBlocks = -5
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `RecoveryCodeGenerator block length cannot be set to 0`() {
-        cut.blockLength = 0
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `RecoveryCodeGenerator block length cannot be set to a negative number`() {
-        cut.blockLength = -5
+    @TestFactory
+    fun `RecoveryCodeGenerator block length cannot be set to 0 or a negative number`() = listOf(
+        -55, -1, 0
+    ).map {
+        DynamicTest.dynamicTest("setting blockLength to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.blockLength = it
+            }
+        }
     }
 
     @Test
@@ -50,7 +49,9 @@ internal class RecoveryCodeGeneratorTest {
         val actual = cut.generateSingleRecoveryCode()
 
         val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        assertTrue(doesRegexMatch, "Format was not matched by regex but should.")
+        Assertions.assertTrue(doesRegexMatch) {
+            "Format was not matched by regex but should."
+        }
     }
 
     @Test
@@ -59,7 +60,9 @@ internal class RecoveryCodeGeneratorTest {
 
         val actual = cut.generateSingleRecoveryCode().length
 
-        assertEquals(expected, actual, "The recovery code was not as long as expected.")
+        Assertions.assertEquals(expected, actual) {
+            "The recovery code was not as long as expected."
+        }
     }
 
     @Test
@@ -71,7 +74,9 @@ internal class RecoveryCodeGeneratorTest {
         val actual = cut.generateSingleRecoveryCode()
 
         val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        assertTrue(doesRegexMatch, "Format was not matched by regex but should.")
+        Assertions.assertTrue(doesRegexMatch) {
+            "Format was not matched by regex but should."
+        }
     }
 
     @Test
@@ -82,7 +87,9 @@ internal class RecoveryCodeGeneratorTest {
 
         val actual = cut.generateSingleRecoveryCode().length
 
-        assertEquals(expected, actual, "The recovery code was not as long as expected.")
+        Assertions.assertEquals(expected, actual) {
+            "The recovery code was not as long as expected."
+        }
     }
 
     @Test
@@ -94,12 +101,20 @@ internal class RecoveryCodeGeneratorTest {
         val actual = cut.generateSingleRecoveryCode()
 
         val doesRegexMatch = expectedFormatRegex.matchEntire(actual) != null
-        assertTrue(doesRegexMatch, "Not all characters were taken from the expected set $charPool.")
+        Assertions.assertTrue(doesRegexMatch) {
+            "Not all characters were taken from the expected set $charPool."
+        }
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `generateRecoveryCodes throws an IllegalArgumentException for negative number of codes`() {
-        cut.generateRecoveryCodes(-2)
+    @TestFactory
+    fun `generateRecoveryCodes throws an IllegalArgumentException for negative number of codes`() = listOf(
+        -55, -1
+    ).map {
+        DynamicTest.dynamicTest("generate $it codes results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.generateRecoveryCodes(it)
+            }
+        }
     }
 
     @Test
@@ -108,7 +123,9 @@ internal class RecoveryCodeGeneratorTest {
 
         val actualNumber = cut.generateRecoveryCodes().size
 
-        assertEquals(expectedNumber, actualNumber, "The number of generated recovery codes was wrong.")
+        Assertions.assertEquals(expectedNumber, actualNumber) {
+            "The number of generated recovery codes was wrong."
+        }
     }
 
     @Test
@@ -117,47 +134,55 @@ internal class RecoveryCodeGeneratorTest {
 
         val actualNumber = cut.generateRecoveryCodes(15).size
 
-        assertEquals(expectedNumber, actualNumber, "The number of generated recovery codes was wrong.")
-    }
-
-    @Test
-    fun `generateRecoveryCodes creates recovery codes with the correct format`() {
-        val expectedFormatRegex =
-            "[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
-
-        val recoveryCodes = cut.generateRecoveryCodes()
-
-        for(recoveryCode in recoveryCodes) {
-            val doesRegexMatch = expectedFormatRegex.matchEntire(recoveryCode) != null
-            assertTrue(doesRegexMatch, "Format was not matched by regex but should.")
+        Assertions.assertEquals(expectedNumber, actualNumber) {
+            "The number of generated recovery codes was wrong."
         }
     }
 
-    @Test
-    fun `generateRecoveryCodes creates recovery codes with the correct format with changed values`() {
+    @TestFactory
+    fun `generateRecoveryCodes creates recovery codes with the correct format`(): List<DynamicTest> {
+        val expectedFormatRegex =
+            "[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
+
+        return cut.generateRecoveryCodes().map {
+            DynamicTest.dynamicTest("format of $it was not as expected") {
+                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
+                Assertions.assertTrue(doesRegexMatch) {
+                    "Format was not matched by regex but should."
+                }
+            }
+        }
+    }
+
+    @TestFactory
+    fun `generateRecoveryCodes creates recovery codes with the correct format with changed values`(): List<DynamicTest> {
         cut.numberOfBlocks = 10
         cut.blockLength = 8
         val expectedFormatRegex = "[A-z\\d]{8}((-[A-z\\d]{8})+)?".toRegex()
 
-        val recoveryCodes = cut.generateRecoveryCodes()
-
-        for(recoveryCode in recoveryCodes) {
-            val doesRegexMatch = expectedFormatRegex.matchEntire(recoveryCode) != null
-            assertTrue(doesRegexMatch, "Format was not matched by regex but should.")
+        return cut.generateRecoveryCodes().map {
+            DynamicTest.dynamicTest("format of $it was not as expected") {
+                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
+                Assertions.assertTrue(doesRegexMatch) {
+                    "Format was not matched by regex but should."
+                }
+            }
         }
     }
 
-    @Test
-    fun `generateRecoveryCodes creates recovery codes with characters from the changed char pool`() {
+    @TestFactory
+    fun `generateRecoveryCodes creates recovery codes with characters from the changed char pool`(): List<DynamicTest> {
         val charPool = listOf('A', 'B', 'C', 'D')
         cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
-        val recoveryCodes = cut.generateRecoveryCodes()
-
-        for(recoveryCode in recoveryCodes) {
-            val doesRegexMatch = expectedFormatRegex.matchEntire(recoveryCode) != null
-            assertTrue(doesRegexMatch, "Not all characters were taken from the expected set $charPool.")
+        return cut.generateRecoveryCodes().map {
+            DynamicTest.dynamicTest("not all characters of $it came from the charpool") {
+                val doesRegexMatch = expectedFormatRegex.matchEntire(it) != null
+                Assertions.assertTrue(doesRegexMatch) {
+                    "Format was not matched by regex but should."
+                }
+            }
         }
     }
 }
