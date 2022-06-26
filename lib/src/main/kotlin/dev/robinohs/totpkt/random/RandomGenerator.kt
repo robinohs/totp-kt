@@ -13,9 +13,13 @@ class RandomGenerator(
     var random: Random = SecureRandom()
 ) {
 
+    init {
+        require(charPool.isNotEmpty()) { "Char pool must not be empty." }
+    }
+
     var charPool = charPool
         set(value) {
-            if (value.isEmpty()) throw IllegalArgumentException("Char pool cannot be empty.")
+            require(value.isNotEmpty()) { "Char pool must not be empty." }
             field = value
         }
 

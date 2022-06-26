@@ -1,8 +1,6 @@
 package dev.robinohs.totpkt.otp.totp
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -22,6 +20,73 @@ internal class TotpGeneratorTest {
     @BeforeEach
     fun init() {
         cut = TotpGenerator()
+    }
+
+    @Test
+    fun `constructor validates arguments`() {
+        Assertions.assertAll(
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    TotpGenerator(
+                        codeLength = -5
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    TotpGenerator(
+                        timePeriod = Duration.ofSeconds(0)
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    TotpGenerator(
+                        timePeriod = Duration.ofSeconds(-5)
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    TotpGenerator(
+                        tolerance = Duration.ofSeconds(-5)
+                    )
+                }
+            }
+        )
+    }
+
+    @TestFactory
+    fun `TotpGenerator codeLength cannot be set to a negative number`() = listOf(
+        -55, -1
+    ).map {
+        DynamicTest.dynamicTest("setting codeLength to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.codeLength = it
+            }
+        }
+    }
+
+    @TestFactory
+    fun `TotpGenerator timePeriod cannot be set to a zero long or negative duration`() = listOf(
+        Duration.ofSeconds(0), Duration.ofSeconds(-5), Duration.ofMinutes(-22),
+    ).map {
+        DynamicTest.dynamicTest("setting timePeriod to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.timePeriod = it
+            }
+        }
+    }
+
+    @TestFactory
+    fun `TotpGenerator tolerance cannot be set to a negative duration`() = listOf(
+        Duration.ofSeconds(-5), Duration.ofMinutes(-22),
+    ).map {
+        DynamicTest.dynamicTest("setting tolerance to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.tolerance = it
+            }
+        }
     }
 
     @Test

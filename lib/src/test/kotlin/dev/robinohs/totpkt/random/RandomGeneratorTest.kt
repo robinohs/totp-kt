@@ -17,6 +17,22 @@ internal class RandomGeneratorTest {
         cut = RandomGenerator()
     }
 
+    @Test
+    fun `constructor validates arguments`() {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            RandomGenerator(
+                charPool = listOf()
+            )
+        }
+    }
+
+    @Test
+    fun `RandomGenerator char pool cannot be set to an empty list`() {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            cut.charPool = listOf()
+        }
+    }
+
     @TestFactory
     fun `generateRandomStringFromCharPool throws an IllegalArgumentException for a negative length argument`() = listOf(
         -1,

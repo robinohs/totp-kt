@@ -12,15 +12,20 @@ class RecoveryCodeGenerator(
     blockLength: Int = RecoveryCodeConfig.DEFAULT_LENGTH_OF_BLOCK,
     var randomGenerator: RandomGenerator = RandomGenerator()
 ) {
+    init {
+        require(numberOfBlocks >= 1) { "Number of blocks must be >= 1." }
+        require(blockLength >= 1) { "Block length must be >= 1." }
+    }
+
     var numberOfBlocks = numberOfBlocks
         set(value) {
-            if (value <= 0) throw IllegalArgumentException("Number of blocks must be >= 1.")
+            require(value >= 1) { "Number of blocks must be >= 1." }
             field = value
         }
 
     var blockLength = blockLength
         set(value) {
-            if (value <= 0) throw IllegalArgumentException("Block length must be >= 1.")
+            require(value >= 1) { "Block length must be >= 1." }
             field = value
         }
 

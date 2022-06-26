@@ -7,6 +7,7 @@ import java.nio.ByteBuffer
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
+import kotlin.math.pow
 
 /**
  * Code computation was built with the help of the pseudocode taken from
@@ -17,8 +18,19 @@ import kotlin.experimental.and
  * @since : 0.0.1
  */
 open class HotpGenerator(
-    open var randomGenerator: RandomGenerator = RandomGenerator()
+    open var randomGenerator: RandomGenerator = RandomGenerator(),
+    codeLength: Int = 6
 ) : OtpGenerator {
+
+    init {
+        require(codeLength >= 0) { "Code length must be >= 0." }
+    }
+
+    open var codeLength = codeLength
+        set(value) {
+            require(value >= 0) { "Code length must be >= 0." }
+            field = value
+        }
 
     override fun isCodeValid(secret: ByteArray, counter: Long, givenCode: String): Boolean {
         return generateCode(secret, counter) == givenCode
@@ -35,9 +47,9 @@ open class HotpGenerator(
         val hash = generateHash(secret, payload)
         val truncatedHash = truncateHash(hash)
         // generate code by computing the hash as integer mod 1000000
-        val code = ByteBuffer.wrap(truncatedHash).int % 1000000
+        val code = ByteBuffer.wrap(truncatedHash).int % 10.0.pow(codeLength).toInt()
         // pad code to correct length, could be too small
-        return code.toString().padStart(6, '0')
+        return code.toString().padStart(codeLength, '0')
     }
 
     private fun generateHash(secret: ByteArray, payload: ByteArray): ByteArray {

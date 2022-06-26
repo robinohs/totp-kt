@@ -13,10 +13,35 @@ import java.time.Instant
  */
 class TotpGenerator(
     override var randomGenerator: RandomGenerator = RandomGenerator(),
-    var timePeriod: Duration = Duration.ofSeconds(30),
-    var tolerance: Duration = Duration.ofSeconds(5),
-    var clock: Clock = Clock.systemUTC()
-) : HotpGenerator(randomGenerator) {
+    codeLength: Int = 6,
+    timePeriod: Duration = Duration.ofSeconds(30),
+    tolerance: Duration = Duration.ofSeconds(5),
+    var clock: Clock = Clock.systemUTC(),
+) : HotpGenerator(randomGenerator, codeLength) {
+
+    init {
+        require(codeLength >= 0) { "Code length must be >= 0." }
+        require(timePeriod.toMillis() >= 1) { "Time period must be be >= 1." }
+        require(tolerance.toMillis() >= 0) { "Tolerance must be be >= 1." }
+    }
+
+    override var codeLength = codeLength
+        set(value) {
+            require(value >= 0) { "Code length must be >= 0." }
+            field = value
+        }
+
+    var timePeriod = timePeriod
+        set(value) {
+            require(value.toMillis() >= 1) { "Time period must be be >= 1." }
+            field = value
+        }
+
+    var tolerance = tolerance
+        set(value) {
+            require(value.toMillis() >= 0) { "Tolerance must be be >= 1." }
+            field = value
+        }
 
     override fun generateCode(secret: ByteArray, counter: Long): String {
         val currentCounter = computeCounterForMillis(counter)

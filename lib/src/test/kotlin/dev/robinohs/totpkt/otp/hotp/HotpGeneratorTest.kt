@@ -2,10 +2,8 @@ package dev.robinohs.totpkt.otp.hotp
 
 import dev.robinohs.totpkt.random.RandomGenerator
 import org.apache.commons.codec.binary.Base32
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.util.*
@@ -27,6 +25,26 @@ internal class HotpGeneratorTest {
             random = Random(5)
         )
         cut = HotpGenerator(randomGenerator)
+    }
+
+    @Test
+    fun `constructor validates arguments`() {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            HotpGenerator(
+                codeLength = -5
+            )
+        }
+    }
+
+    @TestFactory
+    fun `HotpGenerator codeLength cannot be set to a negative number`() = listOf(
+        -55, -1
+    ).map {
+        DynamicTest.dynamicTest("setting codeLength to $it results in an IllegalArgumentException") {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                cut.codeLength = it
+            }
+        }
     }
 
     @ParameterizedTest

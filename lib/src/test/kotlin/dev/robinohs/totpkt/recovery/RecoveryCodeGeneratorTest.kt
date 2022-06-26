@@ -4,6 +4,7 @@ import dev.robinohs.totpkt.random.RandomGenerator
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_LENGTH_OF_BLOCK
 import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.function.Executable
 
 /**
  * @author : Robin Ohs
@@ -17,6 +18,40 @@ internal class RecoveryCodeGeneratorTest {
     @BeforeEach
     fun init() {
         cut = RecoveryCodeGenerator()
+    }
+
+    @Test
+    fun `constructor validates arguments`() {
+        Assertions.assertAll(
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    RecoveryCodeGenerator(
+                        numberOfBlocks = -5
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    RecoveryCodeGenerator(
+                        numberOfBlocks = 0
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    RecoveryCodeGenerator(
+                        blockLength = -5
+                    )
+                }
+            },
+            Executable {
+                Assertions.assertThrows(IllegalArgumentException::class.java) {
+                    RecoveryCodeGenerator(
+                        blockLength = 0
+                    )
+                }
+            },
+        )
     }
 
     @TestFactory
