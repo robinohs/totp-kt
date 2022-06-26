@@ -31,7 +31,7 @@ class RandomGenerator(
      * @return the randomly generated string.
      */
     fun generateRandomStringFromCharPool(length: Int): String {
-        require(length < 0) { "Length must >= 0." }
+        require(length >= 0) { "Length must >= 0." }
         return (1..length)
             .map { random.nextInt(charPool.size) }
             .map(charPool::get)

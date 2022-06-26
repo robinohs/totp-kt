@@ -48,7 +48,7 @@ class RecoveryCodeGenerator(
      * @return the list of randomly generated recovery codes.
      */
     fun generateRecoveryCodes(number: Int = RecoveryCodeConfig.DEFAULT_NUMBER_OF_RECOVERY_CODES): List<String> {
-        require(number < 0) { "Number must be >= 0, but was $number." }
+        require(number >= 0) { "Number must be >= 0, but was $number." }
         return (1..number).map { generateSingleRecoveryCode() }
     }
 }
