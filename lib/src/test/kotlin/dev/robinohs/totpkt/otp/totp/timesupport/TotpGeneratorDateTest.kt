@@ -54,6 +54,22 @@ internal class TotpGeneratorDateTest {
         Assertions.assertNotEquals(actual1, actual2) { "Codes should be different but were equal." }
     }
 
+    @ParameterizedTest
+    @CsvSource(
+        "4",
+        "6",
+        "9",
+        "10",
+        "12",
+    )
+    fun `generateCode produces codes of the correct length for changed setting`(expected: Int) {
+        cut.codeLength = expected
+
+        val actual = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(1656114738767))).length
+
+        Assertions.assertEquals(expected, actual) { "Code length was not as expected. $expected not equal to $actual." }
+    }
+
     @Test
     fun `isCodeValid checks codes correctly with given date`() {
         val actual1 = cut.isCodeValid(secret, Date.from(Instant.ofEpochMilli(1656115068732)), "196157")

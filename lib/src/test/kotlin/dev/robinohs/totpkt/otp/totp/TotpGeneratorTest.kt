@@ -90,8 +90,8 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun `generateCode produces 6 digit long codes for given timestamps`() {
-        val expected = "316152"
+    fun `generateCode produces 8 digit long codes if codeLength is changed to it`() {
+        val expected = 8
 
         val actual1 = cut.generateCode(secret, 1656114883887)
         val actual2 = cut.generateCode(secret, 1656114891677)
@@ -114,6 +114,22 @@ internal class TotpGeneratorTest {
         val actual2 = cut.generateCode(secret2, timestamp)
 
         Assertions.assertNotEquals(actual1, actual2) { "Codes should be different but were equal." }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "4",
+        "6",
+        "9",
+        "10",
+        "12",
+    )
+    fun `generateCode produces codes of the correct length for changed setting`(expected: Int) {
+        cut.codeLength = expected
+
+        val actual = cut.generateCode(secret, 1656115068732).length
+
+        Assertions.assertEquals(expected, actual) { "Code length was not as expected. $expected not equal to $actual." }
     }
 
     @Test
