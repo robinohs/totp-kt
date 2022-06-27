@@ -52,4 +52,5 @@ jobs:
       - run:
           name: Create jacoco test report
           command: gradle test jacocoTestReport
-      - codecov/upload
+      - codecov/upload:
+          name: Upload to codecov
