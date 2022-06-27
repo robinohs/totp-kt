@@ -13,15 +13,70 @@ Enables the developer to:
 # Navigation
  - [Installation](#installation)
 	- [Jitpack](#jitpack)
+		- [Kotlin DSL](#kotlin-dsl)
+		- [Maven](#maven)
+		- [Gradle](#gradle)
  - [Usage](#usage)
     - [Example](#example)
     - [Spring Boot](#spring-boot)
   - [License](#license)
 
 # Installation
-
 ## Jitpack
-
+#### Kotlin DSL
+Add Jitpack to repositories:
+```kotlin
+//build.gradle.kts
+repositories {  
+	mavenCentral()  
+	maven { url = uri("https://jitpack.io") }  
+}
+```
+Add the dependency:
+```kotlin
+//build.gradle.kts
+dependencies {
+	implementation("com.github.robinohs:totp-kt:v1.0.2-alpha")
+}
+```
+#### Maven
+Add Jitpack to repositories:
+```kotlin
+//pom.xml
+<repositories>
+	<repository>
+		<id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+	</repository>
+</repositories>
+```
+Add the dependency:
+```kotlin
+//pom.xml
+<dependency>
+    <groupId>com.github.robinohs</groupId>
+    <artifactId>totp-kt</artifactId>
+    <version>v1.0.2-alpha</version>
+</dependency>
+```
+#### Gradle
+Add Jitpack to repositories:
+```kotlin
+//build.gradle
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+Add the dependency:
+```kotlin
+//build.gradle
+dependencies {
+	implementation 'com.github.robinohs:totp-kt:v1.0.2-alpha'
+}
+```
 # Usage
 ## Example
 ## Spring Boot
