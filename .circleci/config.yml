@@ -1,6 +1,9 @@
 # Java Gradle CircleCI 2.0 configuration file
 # See: https://circleci.com/docs/2.0/language-java/
-version: 2
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@3.2.3
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -43,5 +46,10 @@ jobs:
           key: v1-dependencies-{{ checksum "lib/build.gradle.kts" }}
 
       # run tests!
-      - run: gradle test build
-      - run: gradle test jacocoTestReport coverallsJacoco
+      - run:
+          name: Run tests
+          command: gradle test build
+      - run:
+          name: Create jacoco test report
+          command: gradle test jacocoTestReport
+      - codecov/upload
