@@ -42,7 +42,15 @@ tasks {
         finalizedBy(jacocoTestReport)
     }
     jacocoTestReport {
+        reports {
+            xml.required.set(true)
+            csv.required.set(false)
+            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        }
         dependsOn(test)
+    }
+    coverallsJacoco {
+        reportPath = "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
     }
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
