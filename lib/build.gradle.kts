@@ -5,6 +5,7 @@ version = "1.0.2"
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
     id("jacoco")
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
     id("org.sonarqube") version "3.3"
     id("java-library")
     id("maven-publish")
@@ -41,7 +42,14 @@ tasks {
         finalizedBy(jacocoTestReport)
     }
     jacocoTestReport {
+        reports {
+            xml.required.set(true)
+            xml.outputLocation.set(layout.buildDirectory.file("$buildDir/reports/jacoco/test/jacocoTestReport.xml"))
+        }
         dependsOn(test)
+    }
+    coverallsJacoco {
+        reportPath = "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
     }
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
