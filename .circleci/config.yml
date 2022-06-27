@@ -43,4 +43,5 @@ jobs:
           key: v1-dependencies-{{ checksum "lib/build.gradle.kts" }}
 
       # run tests!
+      - run: gradle test build
       - run: gradle test jacocoTestReport coverallsJacoco

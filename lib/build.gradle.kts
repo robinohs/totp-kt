@@ -44,8 +44,7 @@ tasks {
     jacocoTestReport {
         reports {
             xml.required.set(true)
-            csv.required.set(false)
-            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+            xml.outputLocation.set(layout.buildDirectory.file("$buildDir/reports/jacoco/test/jacocoTestReport.xml"))
         }
         dependsOn(test)
     }
