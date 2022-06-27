@@ -1,11 +1,11 @@
 description = ""
 group = "dev.robinohs"
-version = "1.0.2"
+version = "1.0.4"
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
     id("jacoco")
-    id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
+    //id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
     id("org.sonarqube") version "3.3"
     id("java-library")
     id("maven-publish")
@@ -48,15 +48,9 @@ tasks {
         }
         dependsOn(test)
     }
-    coverallsJacoco {
-        reportPath = "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
-    }
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
+//    coverallsJacoco {
+//        reportPath = "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+//    }
 }
 
 publishing {
