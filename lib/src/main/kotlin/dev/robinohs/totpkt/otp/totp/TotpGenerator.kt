@@ -1,7 +1,6 @@
 package dev.robinohs.totpkt.otp.totp
 
 import dev.robinohs.totpkt.otp.hotp.HotpGenerator
-import dev.robinohs.totpkt.random.RandomGenerator
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
@@ -12,12 +11,11 @@ import java.time.Instant
  * @since : 1.0.0
  */
 class TotpGenerator(
-    override var randomGenerator: RandomGenerator = RandomGenerator(),
     codeLength: Int = 6,
     timePeriod: Duration = Duration.ofSeconds(30),
     tolerance: Duration = Duration.ofSeconds(5),
     var clock: Clock = Clock.systemUTC(),
-) : HotpGenerator(randomGenerator, codeLength) {
+) : HotpGenerator(codeLength) {
 
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }

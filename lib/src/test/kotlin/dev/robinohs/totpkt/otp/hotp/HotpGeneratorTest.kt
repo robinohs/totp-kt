@@ -1,12 +1,8 @@
 package dev.robinohs.totpkt.otp.hotp
 
-import dev.robinohs.totpkt.random.RandomGenerator
 import org.apache.commons.codec.binary.Base32
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import java.util.*
 
 /**
  * @author : Robin Ohs
@@ -20,11 +16,7 @@ internal class HotpGeneratorTest {
 
     @BeforeEach
     fun init() {
-        val randomGenerator = RandomGenerator(
-            charPool = listOf('A', 'B'),
-            random = Random(5)
-        )
-        cut = HotpGenerator(randomGenerator)
+        cut = HotpGenerator()
     }
 
     @Test
@@ -44,21 +36,6 @@ internal class HotpGeneratorTest {
             Assertions.assertThrows(IllegalArgumentException::class.java) {
                 cut.codeLength = it
             }
-        }
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "10, IJAUCQSBIJAUEQKB",
-        "20, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSC",
-        "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
-        "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
-    )
-    fun `generateSecret produces random values and encodes them to base32`(length: Int, expected: String) {
-        val actual = cut.generateSecret(length).toString(Charsets.UTF_8)
-
-        Assertions.assertEquals(expected, actual) {
-            "The generated secret was not encoded to the correct value."
         }
     }
 

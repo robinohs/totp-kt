@@ -1,7 +1,6 @@
 package dev.robinohs.totpkt.otp.hotp
 
 import dev.robinohs.totpkt.otp.OtpGenerator
-import dev.robinohs.totpkt.random.RandomGenerator
 import org.apache.commons.codec.binary.Base32
 import java.nio.ByteBuffer
 import javax.crypto.Mac
@@ -18,7 +17,6 @@ import kotlin.math.pow
  * @since : 1.0.0
  */
 open class HotpGenerator(
-    open var randomGenerator: RandomGenerator = RandomGenerator(),
     codeLength: Int = 6
 ) : OtpGenerator {
 
@@ -34,11 +32,6 @@ open class HotpGenerator(
 
     override fun isCodeValid(secret: ByteArray, counter: Long, givenCode: String): Boolean {
         return generateCode(secret, counter) == givenCode
-    }
-
-    override fun generateSecret(length: Int): ByteArray {
-        val plainSecret = randomGenerator.generateRandomStringFromCharPool(length).toByteArray()
-        return Base32().encode(plainSecret)
     }
 
     override fun generateCode(secret: ByteArray, counter: Long): String {
