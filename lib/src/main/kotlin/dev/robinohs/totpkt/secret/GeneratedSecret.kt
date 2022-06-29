@@ -3,12 +3,9 @@ package dev.robinohs.totpkt.secret
 /**
  * @author : Robin Ohs
  * @created : 29.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
-data class GeneratedSecret(
-    val secretAsString: String,
-    val secretAsByteArray: ByteArray
-) {
+data class GeneratedSecret(val secretAsString: String, val secretAsByteArray: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

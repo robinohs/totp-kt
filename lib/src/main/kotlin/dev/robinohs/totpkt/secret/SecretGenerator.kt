@@ -6,11 +6,9 @@ import org.apache.commons.codec.binary.Base32
 /**
  * @author : Robin Ohs
  * @created : 29.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
-class SecretGenerator(
-    var randomGenerator: RandomGenerator = RandomGenerator()
-) {
+class SecretGenerator(var randomGenerator: RandomGenerator = RandomGenerator()) {
     /**
      * Generates a secure random secret and converts it into Base32 encoding.
      *

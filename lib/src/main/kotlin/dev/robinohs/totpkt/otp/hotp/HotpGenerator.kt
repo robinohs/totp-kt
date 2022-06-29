@@ -16,9 +16,7 @@ import kotlin.math.pow
  * @created : 24.06.2022
  * @since : 1.0.0
  */
-open class HotpGenerator(
-    codeLength: Int = 6
-) : OtpGenerator {
+open class HotpGenerator(codeLength: Int = 6) : OtpGenerator {
 
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }
