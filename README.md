@@ -18,8 +18,10 @@ Enables the developer to:
  - [Usage](#usage)
     - [TOTP (Time-based One-Time Password)](#totp-time-based-one-time-password)
     - [HOTP (HMAC-based One-Time Password)](#hotp-hmac-based-one-time-password)
-    - [Recovery code generator](#hotp-hmac-based-one-time-password)
-    - [Google Authenticator](#google-authenticator)
+    - [Secret generator](#secret-generator)
+    - [Recovery-Code generator](#recovery-code-generator)
+    - [Random Generator](#random-generator)
+  - [Spring Boot](#spring-boot)
   - [License](#license)
 
 
@@ -219,8 +221,13 @@ It is possible to customize the properties of the generator, either by setters o
 #### Code Length
 The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
 
-## Secret  generator
+## Secret generator
 The secret generator can be used to generate base32 encoded secrets as strings and bytearrays.
+### Create a Secret  generator
+You can create an instance of the SecretGenerator in the following way:
+```kotlin
+val secretGenerator = SecretGenerator()
+```
 ### Use the Secret generator
 #### Method: Generate Secret
 If you want to generate a secret that can be used as a shared secret between the client and the server, there is the generateSecret function. The default behavior of the function is to generate a 10 character secret and convert it to a Base32Secret instance. Optionally you can specify the length of the plain input to the base32 encoding secret.
@@ -236,17 +243,24 @@ val (secretAsString, secretAsByteArray) = base32Secret
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Random Generator
-TODO
+The RandomGenerator instance used internally to generate random strings.
+
 ## Recovery-Code generator
 This generator can be used to create a randomly generated string in block form.
-### Method: Generate Recovery-Code
+### Create a Recovery-Code generator
+You can create an instance of the RecoveryCodeGenerator in the following way:
+```kotlin
+val recoveryCodeGenerator = RecoveryCodeGenerator()
+```
+### Use the Recovery-Code generator
+#### Method: Generate Recovery-Code
 This method generates a single recovery-code.
 ```kotlin
 val recoveryCode = recoveryCodeGenerator.generateRecoveryCode()
 println(recoveryCode)
 "AAAA-BBBB-CCCC-DDDD"
 ```
-### Method: Generate a list of Recovery-Codes
+#### Method: Generate a list of Recovery-Codes
 This method generates a list of recovery-codes.
 ```kotlin
 val recoveryCodes = recoveryCodeGenerator.generateRecoveryCodes(3)
@@ -260,12 +274,49 @@ Specifies the number of blocks that make up each recovery code.
 #### Blocklength
 Specifies the length of each block in each recovery code.
 #### Random Generator
-TODO
+The RandomGenerator instance used internally to generate random strings.
+
 ## Random Generator
-TODO
+The random generator is internally used by the [SecretGenerator](#secret-generator) and [RecoveryCodeGenerator](#secret-generator) to create randomly secure strings.
+### Customize properties
+It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
+#### Random (Dangerous)
+The generator accepts any class implementing the java random interface.
+> The default is the SecureRandom implementation and should not be changed unless you know what you are doing!
+#### Charpool (Dangerous)
+The char pool specifies the list of characters that can be used to generate the string.
+> If the char pool gets too small, the security is weakend. For example a 10-character long password with the default charset of the library has the following properties:$$
+Combinations: 62^{10} = 8.3929937e^{17}\\
+Entropy: log_2(62^{10}) = 59.542
+$$
+Passwords with a entropy >50 are considered to be secure.
 ## Spring Boot
-TODO
-## Google Authenticator
-TODO
+Instead of creating a new instance of any generator each time a token is checked, it is also possible to create a bean within Spring.
+```kotlin
+@Bean  
+fun totpGenerator(): TotpGenerator {  
+    val generator = TotpGenerator()  
+    generator.codeLength = 9
+    generator.timePeriod = Duration.ofSeconds(20)
+    return generator
+}  
+  
+@Bean  
+fun recoveryCodeGenerator(): RecoveryCodeGenerator {  
+    val generator = RecoveryCodeGenerator()
+    generator.blockLength = 5
+    return generator
+}
+```
+You can then access the instance in the constructor of every class marked with @Component (@Service, ...).
+```kotlin
+@Component  
+class CustomComponent(  
+  private val totpGenerator: TotpGenerator,
+  private val recoveryCodeGenerator: RecoveryCodeGenerator
+) {
+	...
+}
+```
 # License
 [MIT](https://github.com/robinohs/totp-kt/blob/master/LICENSE)
