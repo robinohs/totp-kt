@@ -109,7 +109,7 @@ You can create an instance of the TotpGenerator in the following way:
 val totpGenerator = TotpGenerator()
 ```
 ### Use the TOTP generator
-#### Generate Code
+#### Method: Generate Code
 After you created the totpGenerator instance you can generate a one-time password by calling the generatore code method with the secret as an argument. Optionally, if you want to specify a specific time and not have the generator to take the current time itself, you can pass a time as an argument.
 ```kotlin
 val secret = some base32_encoded_secret_as_bytearray
@@ -124,7 +124,7 @@ totpGenerator.generateCode(secret, Instant(...))
 // with Date
 totpGenerator.generateCode(secret, Date(...))
 ```
-#### Validate Code
+#### Method: Validate Code
 There is a helper function to compare a currently generated code with a given code. Optionally, you can also use generateCode yourself and compare the resulting string to the client's code.
 ```kotlin
 val secret = some base32_encoded_secret_as_bytearray
@@ -140,11 +140,21 @@ totpGenerator.isCodeValid(secret, Instant(...), clientCode)
 // with Date
 totpGenerator.isCodeValid(secret, Date(...), clientCode)
 ```
-#### Generate Secret
-If you want to generate a secret that can be used as a shared secret between the client and the server, there is the generateSecret function. The default behavior of the function is to generate a 10 character secret and convert it to a Base32 encoded ByteArray. Optionally you can specify the length of the generated secret.
+#### Method: Validate Code With Tolerance
+The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
 ```kotlin
-val secret = totpGenerator.generateSecret()
-val secret2 = totpGenerator.generateSecret(15)
+val secret = some base32_encoded_secret_as_bytearray
+val clientCode = given client_code
+totpGenerator.isCodeValidWithTolerance(secret, clientCode)
+```
+If one would like to specify a time:
+```kotlin
+// with millis
+totpGenerator.isCodeValidWithTolerance(secret, 1656459878681, clientCode)
+// with Instant
+totpGenerator.isCodeValidWithTolerance(secret, Instant(...), clientCode)
+// with Date
+totpGenerator.isCodeValidWithTolerance(secret, Date(...), clientCode)
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
@@ -157,11 +167,13 @@ totpGenerator.clock = Clock.systemUTC()
 ```
 > For testing purposes, one could assign a **Clock.fixed** that always returns the same timestamp and thus the same TOTP code.
 #### Timeperiod
-TODO
+The timeperiod is the duration of every time step in which the generated code is the same. This is needed as due to delays (e.g., network delay) the server will not generate the code with the same timestamp as the client. As a compromise between security and usability the default time step is set as 30 seconds.
+> A time period of 30 seconds is used by the Google or Mircrosoft Authenticator app.
 #### Tolerance
-TODO
+The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
 #### Code Length
-TODO
+The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
+> A length of 6 digits is used by the Google or Mircrosoft Authenticator app.
 ## HOTP (HMAC-based One-Time Password)
 The HMAC-based one-time password method generates one-time passwords by using a shared secret in combination with a counter as the source of uniqueness. The major problem of this approach is the synchronization of the counter between the client and the server. Synchronization is out of scope for this library and therefore needs to be implemented by the consumer. A method for re-synchronization is described in the specification [RFC4226#7.4](https://datatracker.ietf.org/doc/html/rfc4226#section-7.4).
 
@@ -187,14 +199,14 @@ You can create an instance of the HotpGenerator in the following way:
 val hotpGenerator = HotpGenerator()
 ```
 ### Use the HOTP generator
-#### Generate Code
+#### Method: Generate Code
 After you created the hotpGenerator instance you can generate a one-time password by calling the generatore code method with the secret and the counter as arguments.
 ```kotlin
 val secret = some base32_encoded_secret_as_bytearray
 val counter = some number
 val code = hotpGenerator.generateCode(secret, counter)
 ```
-#### Validate Code
+#### Method: Validate Code
 There is a helper function to compare a generated code with a given code. Optionally, you could also use generateCode yourself and compare the resulting string to the client's code.
 ```kotlin
 val secret = some base32_encoded_secret_as_bytearray
@@ -204,37 +216,49 @@ totpGenerator.isCodeValid(secret, counter, clientCode)
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
-#### Token Length
-TODO
+#### Code Length
+The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
 
 ## Secret  generator
 The secret generator can be used to generate base32 encoded secrets as strings and bytearrays.
-### Method: Generate Secret
+### Use the Secret generator
+#### Method: Generate Secret
 If you want to generate a secret that can be used as a shared secret between the client and the server, there is the generateSecret function. The default behavior of the function is to generate a 10 character secret and convert it to a Base32Secret instance. Optionally you can specify the length of the plain input to the base32 encoding secret.
 ```kotlin
-val base32Secret: Base32Secret = totpGenerator.generateSecret()
+val base32Secret: Base32Secret = secretGenerator.generateSecret()
 ```
-### Class: Base32Secret
+#### Class: Base32Secret
 The Base32Secret data class contains a secret in the form of a bytearray and a string.
 ```kotlin
-val base32Secret: Base32Secret = cut.generateSecret()
+val base32Secret: Base32Secret = secretGenerator.generateSecret()
 val (secretAsString, secretAsByteArray) = base32Secret
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Random Generator
 TODO
-## Recovery code generator
-### Method: Generate Recovery  Code
-TODO
-### Method: Generate list of Recovery Codes
-TODO
+## Recovery-Code generator
+This generator can be used to create a randomly generated string in block form.
+### Method: Generate Recovery-Code
+This method generates a single recovery-code.
+```kotlin
+val recoveryCode = recoveryCodeGenerator.generateRecoveryCode()
+println(recoveryCode)
+"AAAA-BBBB-CCCC-DDDD"
+```
+### Method: Generate a list of Recovery-Codes
+This method generates a list of recovery-codes.
+```kotlin
+val recoveryCodes = recoveryCodeGenerator.generateRecoveryCodes(3)
+println(recoveryCodes)
+["AAAA-BBBB-CCCC-DDDD", "BBBB-AAAA-CCCC-DDDD", "BBBB-AAAA-DDDD-CCCC"]
+```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Number of blocks
-TODO
+Specifies the number of blocks that make up each recovery code.
 #### Blocklength
-TODO
+Specifies the length of each block in each recovery code.
 #### Random Generator
 TODO
 ## Random Generator
