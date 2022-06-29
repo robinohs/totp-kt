@@ -24,11 +24,11 @@ class RandomGenerator(
         }
 
     /**
-     * Creates a randomly generated string with characters from the character pool.
+     * Creates a string with random characters from the character pool.
      *
-     * @param length the length of the generated string.
-     * @throws IllegalArgumentException if the number of codes is negative.
-     * @return the randomly generated string.
+     * @param length the length of the string.
+     * @throws IllegalArgumentException if the length is negative.
+     * @return the generated string.
      */
     fun generateRandomStringFromCharPool(length: Int): String {
         require(length >= 0) { "Length must >= 0." }
