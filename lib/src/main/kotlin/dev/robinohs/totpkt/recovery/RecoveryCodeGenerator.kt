@@ -35,7 +35,7 @@ class RecoveryCodeGenerator(
      *
      * @return the randomly generated string of character blocks.
      */
-    fun generateSingleRecoveryCode(): String = (1..numberOfBlocks)
+    fun generateRecoveryCode(): String = (1..numberOfBlocks)
         .joinToString("-") {
             randomGenerator.generateRandomStringFromCharPool(blockLength)
         }
@@ -49,6 +49,6 @@ class RecoveryCodeGenerator(
      */
     fun generateRecoveryCodes(number: Int = RecoveryCodeConfig.DEFAULT_NUMBER_OF_RECOVERY_CODES): List<String> {
         require(number >= 0) { "Number must be >= 0, but was $number." }
-        return (1..number).map { generateSingleRecoveryCode() }
+        return (1..number).map { generateRecoveryCode() }
     }
 }

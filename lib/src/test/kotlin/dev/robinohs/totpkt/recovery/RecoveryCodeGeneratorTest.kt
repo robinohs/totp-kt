@@ -81,7 +81,7 @@ internal class RecoveryCodeGeneratorTest {
         val expectedFormatRegex =
             "[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
-        val actual = cut.generateSingleRecoveryCode()
+        val actual = cut.generateRecoveryCode()
 
         Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
             "Format was not matched by regex but should."
@@ -101,7 +101,7 @@ internal class RecoveryCodeGeneratorTest {
             cut.blockLength = blockLength
             val expected = numberOfBlocks * blockLength + (numberOfBlocks - 1)
 
-            val actual = cut.generateSingleRecoveryCode().length
+            val actual = cut.generateRecoveryCode().length
 
             Assertions.assertEquals(expected, actual) {
                 "The recovery code was not as long as expected."
@@ -122,7 +122,7 @@ internal class RecoveryCodeGeneratorTest {
             cut.numberOfBlocks = numberOfBlocks
             cut.blockLength = blockLength
 
-            val actual = cut.generateSingleRecoveryCode()
+            val actual = cut.generateRecoveryCode()
 
             Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
                 "Format was not matched by regex but should."
@@ -136,7 +136,7 @@ internal class RecoveryCodeGeneratorTest {
         cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
-        val actual = cut.generateSingleRecoveryCode()
+        val actual = cut.generateRecoveryCode()
 
         Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
             "Not all characters were taken from the expected set $charPool."
