@@ -87,7 +87,7 @@ dependencies {
 # Usage
 ## TOTP (Time-based One-Time Password)
 Time-based One-Time Password generates one-time passwords by a shared secret combined with a current time window as the source for uniqueness. The TOTP algorithm is an extension of [HOTP](#hotp-hmac-based-one-time-password). The algorithm is used by commonly known authenticator apps, e.g. Google Authenticator, Mircrosoft Authenticator and others.
-### Basic TOTP flow
+### TOTP flow
 ```mermaid
 sequenceDiagram
 participant Client
@@ -106,6 +106,45 @@ You can create an instance of the TOTPGenerator in the following way:
 ```kotlin
 val totpGenerator = TotpGenerator()
 ```
+### Use TOTP generator
+#### Generate Code
+After you created the totpGenerator instance you can generate a one-time password by calling the generatore code method with the secret as an argument. Optionally, if you want to specify a specific time and not have the generator to take the current time itself, you can pass a time as an argument.
+```kotlin
+val secret = some base32_encoded_secret_as_bytearray
+val code = totpGenerator.generateCode(secret)
+```
+If one would like to specify a time:
+```kotlin
+// with millis
+totpGenerator.generateCode(secret, 1656459878681)
+// with Instant
+totpGenerator.generateCode(secret, Instant(...))
+// with Date
+totpGenerator.generateCode(secret, Date(...))
+```
+#### Validate Code
+There is a helper function to compare a currently generated code with a given code. Optionally, you can also use generateCode yourself and compare the resulting string to the client's code.
+```kotlin
+val secret = some base32_encoded_secret_as_bytearray
+val clientCode = given client_code
+totpGenerator.isCodeValid(secret, clientCode)
+```
+If one would like to specify a time:
+```kotlin
+// with millis
+totpGenerator.isCodeValid(secret, 1656459878681, clientCode)
+// with Instant
+totpGenerator.isCodeValid(secret, Instant(...), clientCode)
+// with Date
+totpGenerator.isCodeValid(secret, Date(...), clientCode)
+```
+#### Generate Secret
+If you want to generate a secret that can be used as a shared secret between the client and the server, there is the generateSecret function. The default behavior of the function is to generate a 10 character secret and convert it to a Base32 encoded ByteArray. Optionally you can specify the length of the generated secret.
+```kotlin
+val secret = totpGenerator.generateSecret()
+val secret2 = totpGenerator.generateSecret(15)
+```
+### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Clock
 The clock is the time source for the generator if no time is passed as an argument to the generate or validate function.
