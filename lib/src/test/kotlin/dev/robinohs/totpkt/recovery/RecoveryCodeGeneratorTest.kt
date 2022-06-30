@@ -6,6 +6,8 @@ import dev.robinohs.totpkt.recovery.RecoveryCodeConfig.DEFAULT_NUMBER_OF_BLOCKS
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 
+private const val FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD = "Format was not matched by regex but should."
+
 /**
  * @author : Robin Ohs
  * @created : 23.06.2022
@@ -126,7 +128,7 @@ internal class RecoveryCodeGeneratorTest {
         val actual = cut.generateRecoveryCode()
 
         Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
-            "Format was not matched by regex but should."
+            FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD
         }
     }
 
@@ -167,7 +169,7 @@ internal class RecoveryCodeGeneratorTest {
             val actual = cut.generateRecoveryCode()
 
             Assertions.assertTrue(expectedFormatRegex.matchEntire(actual) != null) {
-                "Format was not matched by regex but should."
+                FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD
             }
         }
     }
@@ -228,7 +230,7 @@ internal class RecoveryCodeGeneratorTest {
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("format of $it was not as expected") {
                 Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
-                    "Format was not matched by regex but should."
+                    FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD
                 }
             }
         }
@@ -243,7 +245,7 @@ internal class RecoveryCodeGeneratorTest {
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("format of $it was not as expected") {
                 Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
-                    "Format was not matched by regex but should."
+                    FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD
                 }
             }
         }
@@ -258,7 +260,7 @@ internal class RecoveryCodeGeneratorTest {
         return cut.generateRecoveryCodes().map {
             DynamicTest.dynamicTest("not all characters of $it came from the charpool") {
                 Assertions.assertTrue(expectedFormatRegex.matchEntire(it) != null) {
-                    "Format was not matched by regex but should."
+                    FORMAT_WAS_NOT_MATCHED_BY_REGEX_BUT_SHOULD
                 }
             }
         }

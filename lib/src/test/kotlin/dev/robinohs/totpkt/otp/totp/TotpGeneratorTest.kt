@@ -6,6 +6,11 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.time.Duration
 
+private const val FIRST_CODE_WAS_NOT_THE_EXPECTED_ONE = "First code was not the expected one."
+private const val SECOND_CODE_WAS_NOT_THE_EXPECTED_ONE = "Second code was not the expected one."
+private const val CODE_SHOULD_NOT_BE_VALID_BUT_WAS = "Code should not be valid but was."
+private const val CODE_SHOULD_BE_VALID_BUT_WAS_NOT = "Code should be valid but was not."
+
 /**
  * @author : Robin Ohs
  * @created : 24.06.2022
@@ -163,8 +168,8 @@ internal class TotpGeneratorTest {
         val actual2 = cut.generateCode(secret, 1656114891677)
 
         Assertions.assertAll(
-            Executable { Assertions.assertEquals(expected, actual1) { "First code was not the expected one." } },
-            Executable { Assertions.assertEquals(expected, actual2) { "Second code was not the expected one." } },
+            Executable { Assertions.assertEquals(expected, actual1) { FIRST_CODE_WAS_NOT_THE_EXPECTED_ONE } },
+            Executable { Assertions.assertEquals(expected, actual2) { SECOND_CODE_WAS_NOT_THE_EXPECTED_ONE } },
         )
     }
 
@@ -204,8 +209,8 @@ internal class TotpGeneratorTest {
         val actual2 = cut.isCodeValid(secret, 1656115073318, "355908")
 
         Assertions.assertAll(
-            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
-            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+            Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertFalse(actual2) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
         )
     }
 
@@ -215,8 +220,8 @@ internal class TotpGeneratorTest {
         val actual2 = cut.isCodeValid(secret2, 1656115068732, "196157")
 
         Assertions.assertAll(
-            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
-            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+            Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertFalse(actual2) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
         )
     }
 
@@ -226,8 +231,8 @@ internal class TotpGeneratorTest {
         val actual2 = cut.isCodeValid(secret, 1656115073318, "355908")
 
         Assertions.assertAll(
-            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
-            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+            Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertFalse(actual2) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
         )
     }
 
@@ -235,21 +240,21 @@ internal class TotpGeneratorTest {
     fun testIsCodeValidWithTolerance_sameTimeslot() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656115068732, "196157")
 
-        Assertions.assertTrue(actual) { "Code should be valid but was not." }
+        Assertions.assertTrue(actual) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT }
     }
 
     @Test
     fun testIsCodeValidWithTolerance_oldTimeslotButInTolerance() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656116160719, "853702")
 
-        Assertions.assertTrue(actual) { "Code should be valid but was not." }
+        Assertions.assertTrue(actual) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT }
     }
 
     @Test
     fun testIsCodeValidWithTolerance_oldTimeslotAndNotInTolerance() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
 
-        Assertions.assertFalse(actual) { "Code should not be valid but was." }
+        Assertions.assertFalse(actual) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS }
     }
 
     @Test
@@ -258,7 +263,7 @@ internal class TotpGeneratorTest {
 
         val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
 
-        Assertions.assertTrue(actual) { "Code should not be valid but was." }
+        Assertions.assertTrue(actual) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS }
     }
 
     @Test
@@ -271,10 +276,10 @@ internal class TotpGeneratorTest {
         val actual4 = cut.isCodeValidWithTolerance(secret, 1656118534840, "110215")
 
         Assertions.assertAll(
-            Executable { Assertions.assertFalse(actual1) { "Code1 was valid but should not." } },
-            Executable { Assertions.assertTrue(actual2) { "Code2 should be valid but was not." } },
-            Executable { Assertions.assertTrue(actual3) { "Code3 should be valid but was not." } },
-            Executable { Assertions.assertTrue(actual4) { "Code4 should be valid but was not." } }
+            Executable { Assertions.assertFalse(actual1) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
+            Executable { Assertions.assertTrue(actual2) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertTrue(actual3) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertTrue(actual4) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } }
         )
     }
 
@@ -288,10 +293,10 @@ internal class TotpGeneratorTest {
         val actual4 = cut.isCodeValidWithTolerance(secret, 1656118534840, "110215")
 
         Assertions.assertAll(
-            Executable { Assertions.assertTrue(actual1) { "Code1 should be valid but was not." } },
-            Executable { Assertions.assertTrue(actual2) { "Code2 should be valid but was not." } },
-            Executable { Assertions.assertTrue(actual3) { "Code3 should be valid but was not." } },
-            Executable { Assertions.assertTrue(actual4) { "Code4 should be valid but was not." } }
+            Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertTrue(actual2) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertTrue(actual3) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertTrue(actual4) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } }
         )
     }
 }

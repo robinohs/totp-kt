@@ -3,6 +3,10 @@ package dev.robinohs.totpkt.otp.hotp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 
+private const val CODE_WAS_NOT_THE_EXPECTED_ONE = "Code was not the expected one."
+private const val CODE_SHOULD_NOT_BE_VALID_BUT_WAS = "Code should not be valid but was."
+private const val CODE_SHOULD_BE_VALID_BUT_WAS_NOT = "Code should be valid but was not."
+
 /**
  * @author : Robin Ohs
  * @created : 24.06.2022
@@ -69,7 +73,7 @@ internal class HotpGeneratorTest {
         val actual = cut.generateCode(secret, 55203835)
 
         Assertions.assertEquals(expected, actual) {
-            "Code was not the expected one."
+            CODE_WAS_NOT_THE_EXPECTED_ONE
         }
     }
 
@@ -99,8 +103,8 @@ internal class HotpGeneratorTest {
         val actual2 = cut.isCodeValid(secret, 55203835, "355908")
 
         Assertions.assertAll(
-            Executable { Assertions.assertTrue(actual1) { "First code should be valid but was not." } },
-            Executable { Assertions.assertFalse(actual2) { "Second code should not be valid but was." } },
+            Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
+            Executable { Assertions.assertFalse(actual2) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
         )
     }
 
