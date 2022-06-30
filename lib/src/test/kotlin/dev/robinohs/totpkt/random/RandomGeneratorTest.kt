@@ -17,6 +17,9 @@ internal class RandomGeneratorTest {
         cut = RandomGenerator()
     }
 
+    /**
+     * Constructor has logic, so it needs to be tested.
+     */
     @Test
     fun constructorTest_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -40,7 +43,7 @@ internal class RandomGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun charPoolSetterTest_nonEmptyListIllegal() = listOf(
+    fun charPoolSetterTest_nonEmptyListIsSet() = listOf(
         listOf('A', 'B'), listOf('F', 'H', 'Z'), listOf('&')
     ).map { expected ->
         DynamicTest.dynamicTest("setting charPool to $expected is allowed") {
