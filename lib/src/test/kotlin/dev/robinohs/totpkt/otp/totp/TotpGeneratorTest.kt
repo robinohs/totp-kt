@@ -27,9 +27,6 @@ internal class TotpGeneratorTest {
         cut = TotpGenerator()
     }
 
-    /**
-     * Constructor has logic, so it needs to be tested.
-     */
     @Test
     fun testConstructor_validatesArguments() {
         Assertions.assertAll(
@@ -64,9 +61,6 @@ internal class TotpGeneratorTest {
         )
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testCodeLengthSetter_negativeNumberIllegal() = listOf(
         -55, -1
@@ -78,9 +72,6 @@ internal class TotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testCodeLengthSetter_zeroOrPositiveNumberIsSet() = listOf(
         0, 1, 10, 13
@@ -96,9 +87,6 @@ internal class TotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testTimePeriodSetter_zeroLengthOrNegativeDurationIllegal() = listOf(
         Duration.ofSeconds(0), Duration.ofSeconds(-5), Duration.ofMinutes(-22),
@@ -110,9 +98,6 @@ internal class TotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testTimePeriodSetter_zeroOrPositiveNumberIsSet() = listOf(
         Duration.ofSeconds(66), Duration.ofMinutes(2), Duration.ofDays(2)
@@ -128,9 +113,6 @@ internal class TotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testToleranceSetter_negativeToleranceIllegal() = listOf(
         Duration.ofSeconds(-5), Duration.ofMinutes(-22),
@@ -142,9 +124,6 @@ internal class TotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testToleranceSetter_zeroOrPositiveDurationIsSet() = listOf(
         Duration.ofSeconds(66), Duration.ofMinutes(0), Duration.ofDays(2)

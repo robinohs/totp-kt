@@ -26,6 +26,13 @@ internal class SecretGeneratorTest {
     }
 
     @Test
+    fun testConstructorAndData() {
+        val cut = SecretGenerator()
+        val randomGenerator = cut.randomGenerator
+        cut.randomGenerator = randomGenerator
+    }
+
+    @Test
     fun testGenerateSecret_defaultArgument() {
         val expected = "IJAUCQSBIJAUEQKB"
         val actual = cut.generateSecret().secretAsString

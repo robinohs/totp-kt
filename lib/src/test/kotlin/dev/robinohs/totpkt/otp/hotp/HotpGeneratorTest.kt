@@ -22,9 +22,6 @@ internal class HotpGeneratorTest {
         cut = HotpGenerator()
     }
 
-    /**
-     * Constructor has logic, so it needs to be tested.
-     */
     @Test
     fun testConstructor_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -34,9 +31,6 @@ internal class HotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testCodeLengthSetter_negativeNumberIllegal() = listOf(
         -55, -1
@@ -48,9 +42,6 @@ internal class HotpGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testCodeLengthSetter_zeroOrPositiveNumberIsSet() = listOf(
         0, 1, 10, 13

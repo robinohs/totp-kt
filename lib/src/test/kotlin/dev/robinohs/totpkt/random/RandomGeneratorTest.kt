@@ -17,9 +17,6 @@ internal class RandomGeneratorTest {
         cut = RandomGenerator()
     }
 
-    /**
-     * Constructor has logic, so it needs to be tested.
-     */
     @Test
     fun testConstructor_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -29,9 +26,6 @@ internal class RandomGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @Test
     fun testCharPoolSetter_emptyListIllegal() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -39,9 +33,6 @@ internal class RandomGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testCharPoolSetter_nonEmptyListIsSet() = listOf(
         listOf('A', 'B'), listOf('F', 'H', 'Z'), listOf('&')

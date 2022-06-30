@@ -56,9 +56,6 @@ internal class RecoveryCodeGeneratorTest {
         )
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testNumberOfBlocksSetter_zeroOrNegativeNumberIllegal() = listOf(
         -55, -1, 0
@@ -70,9 +67,6 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testNumberOfBlocksSetter_positiveNumberIsSet() = listOf(
         55, 4, 3
@@ -88,9 +82,6 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testBlockLengthSetter_zeroOrNegativeNumberIllegal() = listOf(
         -55, -1, 0
@@ -102,9 +93,6 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
-    /**
-     * Setter has logic, so it needs to be tested.
-     */
     @TestFactory
     fun testBlockLengthSetter_positiveNumberIsSet() = listOf(
         55, 4, 3
