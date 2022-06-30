@@ -54,7 +54,7 @@ dependencies {
 #### Maven
 Add Jitpack to repositories:
 ```xml
-//pom.xml
+<!--pom.xml-->
 <repositories>
   <repository>
     <id>jitpack.io</id>
@@ -64,7 +64,7 @@ Add Jitpack to repositories:
 ```
 Add the dependency:
 ```xml
-//pom.xml
+<!--pom.xml-->
 <dependency>
   <groupId>com.github.robinohs</groupId>
     <artifactId>totp-kt</artifactId>
@@ -73,17 +73,17 @@ Add the dependency:
 ```
 #### Gradle
 Add Jitpack to repositories:
-```kotlin
+```groovy
 //build.gradle
 allprojects {
   repositories {
-    ...
+    //...
     maven { url 'https://jitpack.io' }
   }
 }
 ```
 Add the dependency:
-```kotlin
+```groovy
 //build.gradle
 dependencies {
   implementation 'com.github.robinohs:totp-kt:v1.0.2-alpha'
@@ -117,7 +117,7 @@ val totpGenerator = TotpGenerator()
 #### Method: Generate Code
 After you created the totpGenerator instance you can generate a one-time password by calling the generatore code method with the secret as an argument. Optionally, if you want to specify a specific time and not have the generator to take the current time itself, you can pass a time as an argument.
 ```kotlin
-val secret = some base32_encoded_secret_as_bytearray
+val secret = some_base32_encoded_secret_as_bytearray
 val code = totpGenerator.generateCode(secret)
 ```
 If one would like to specify a time:
@@ -125,15 +125,15 @@ If one would like to specify a time:
 // with millis
 totpGenerator.generateCode(secret, 1656459878681)
 // with Instant
-totpGenerator.generateCode(secret, Instant(...))
+totpGenerator.generateCode(secret, Instant())
 // with Date
-totpGenerator.generateCode(secret, Date(...))
+totpGenerator.generateCode(secret, Date())
 ```
 #### Method: Validate Code
 There is a helper function to compare a currently generated code with a given code. Optionally, you can also use generateCode yourself and compare the resulting string to the client's code.
 ```kotlin
-val secret = some base32_encoded_secret_as_bytearray
-val clientCode = given client_code
+val secret = some_base32_encoded_secret_as_bytearray
+val clientCode = given_client_code
 totpGenerator.isCodeValid(secret, clientCode)
 ```
 If one would like to specify a time:
@@ -141,15 +141,15 @@ If one would like to specify a time:
 // with millis
 totpGenerator.isCodeValid(secret, 1656459878681, clientCode)
 // with Instant
-totpGenerator.isCodeValid(secret, Instant(...), clientCode)
+totpGenerator.isCodeValid(secret, Instant(), clientCode)
 // with Date
-totpGenerator.isCodeValid(secret, Date(...), clientCode)
+totpGenerator.isCodeValid(secret, Date(), clientCode)
 ```
 #### Method: Validate Code With Tolerance
 The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
 ```kotlin
-val secret = some base32_encoded_secret_as_bytearray
-val clientCode = given client_code
+val secret = some_base32_encoded_secret_as_bytearray
+val clientCode = given_client_code
 totpGenerator.isCodeValidWithTolerance(secret, clientCode)
 ```
 If one would like to specify a time:
@@ -157,9 +157,9 @@ If one would like to specify a time:
 // with millis
 totpGenerator.isCodeValidWithTolerance(secret, 1656459878681, clientCode)
 // with Instant
-totpGenerator.isCodeValidWithTolerance(secret, Instant(...), clientCode)
+totpGenerator.isCodeValidWithTolerance(secret, Instant(), clientCode)
 // with Date
-totpGenerator.isCodeValidWithTolerance(secret, Date(...), clientCode)
+totpGenerator.isCodeValidWithTolerance(secret, Date(), clientCode)
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
@@ -171,8 +171,8 @@ val totpGenerator = TotpGenerator(clock = Clock.systemUTC())
 totpGenerator.clock = Clock.systemUTC()
 ```
 > For testing purposes, one could assign a **Clock.fixed** that always returns the same timestamp and thus the same TOTP code.
-#### Timeperiod
-The timeperiod is the duration of every time step in which the generated code is the same. This is needed as due to delays (e.g., network delay) the server will not generate the code with the same timestamp as the client. As a compromise between security and usability the default time step is set as 30 seconds.
+#### Time period
+The time period is the duration of every time step in which the generated code is the same. This is needed as due to delays (e.g., network delay) the server will not generate the code with the same timestamp as the client. As a compromise between security and usability the default time step is set as 30 seconds.
 > A time period of 30 seconds is used by the Google or Mircrosoft Authenticator app.
 #### Tolerance
 The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
@@ -207,16 +207,16 @@ val hotpGenerator = HotpGenerator()
 #### Method: Generate Code
 After you created the hotpGenerator instance you can generate a one-time password by calling the generatore code method with the secret and the counter as arguments.
 ```kotlin
-val secret = some base32_encoded_secret_as_bytearray
-val counter = some number
+val secret = some_base32_encoded_secret_as_bytearray
+val counter = some_number
 val code = hotpGenerator.generateCode(secret, counter)
 ```
 #### Method: Validate Code
 There is a helper function to compare a generated code with a given code. Optionally, you could also use generateCode yourself and compare the resulting string to the client's code.
 ```kotlin
-val secret = some base32_encoded_secret_as_bytearray
-val counter = some number
-val clientCode = given client_code
+val secret = some_base32_encoded_secret_as_bytearray
+val counter = some_number
+val clientCode = given_client_code
 totpGenerator.isCodeValid(secret, counter, clientCode)
 ```
 ### Customize properties
@@ -245,7 +245,7 @@ val (secretAsString, secretAsByteArray) = base32Secret
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
-#### Random Generator
+#### Used Random generator
 The RandomGenerator instance used internally to generate random strings.
 
 ## Recovery-Code generator
@@ -274,12 +274,12 @@ println(recoveryCodes)
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Number of blocks
 Specifies the number of blocks that make up each recovery code.
-#### Blocklength
+#### Block length
 Specifies the length of each block in each recovery code.
-#### Random Generator
+#### Used Random generator
 The RandomGenerator instance used internally to generate random strings.
 
-## Random Generator
+## Random generator
 The random generator is internally used by the [SecretGenerator](#secret-generator) and [RecoveryCodeGenerator](#secret-generator) to create randomly secure strings.
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
@@ -295,6 +295,7 @@ $$
 Passwords with a entropy >50 are considered to be secure.
 ## Spring Boot
 Instead of creating a new instance of a generator each time a token is checked, it is also possible to create a bean within Spring.
+This allows to configure the generator once and this configuration is maintained each time the bean is injected into a component. 
 ```kotlin
 @Bean  
 fun totpGenerator(): TotpGenerator {  
@@ -318,7 +319,7 @@ class CustomComponent(
   private val totpGenerator: TotpGenerator,
   private val recoveryCodeGenerator: RecoveryCodeGenerator
 ) {
-	...
+	//...
 }
 ```
 # License
