@@ -61,6 +61,39 @@ internal class TotpGeneratorTest {
         )
     }
 
+    @Test
+    fun testConstructor_allowsValidArguments() {
+        Assertions.assertAll(
+            Executable {
+                val expected = 5
+
+                val actual = TotpGenerator(
+                    codeLength = expected
+                ).codeLength
+
+                Assertions.assertEquals(expected, actual) { "Expected and actual code length are equal." }
+            },
+            Executable {
+                val expected = Duration.ofSeconds(6)
+
+                val actual = TotpGenerator(
+                    timePeriod = expected
+                ).timePeriod
+
+                Assertions.assertEquals(expected, actual) { "Expected and actual time period are equal." }
+            },
+            Executable {
+                val expected = Duration.ofSeconds(6)
+
+                val actual = TotpGenerator(
+                    tolerance = expected
+                ).tolerance
+
+                Assertions.assertEquals(expected, actual) { "Expected and actual tolerance are equal." }
+            },
+        )
+    }
+
     @TestFactory
     fun testCodeLengthSetter_negativeNumberIllegal() = listOf(
         -55, -1
