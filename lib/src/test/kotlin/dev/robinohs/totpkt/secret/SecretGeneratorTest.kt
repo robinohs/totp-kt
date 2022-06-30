@@ -3,6 +3,7 @@ package dev.robinohs.totpkt.secret
 import dev.robinohs.totpkt.random.RandomGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.util.*
@@ -22,6 +23,16 @@ internal class SecretGeneratorTest {
             random = Random(5)
         )
         cut = SecretGenerator(randomGenerator)
+    }
+
+    @Test
+    fun generateSecretTest_defaultArgument() {
+        val expected = "IJAUCQSBIJAUEQKB"
+        val actual = cut.generateSecret().secretAsString
+
+        assertEquals(expected, actual) {
+            "The generated secret was not encoded to the correct value."
+        }
     }
 
     @ParameterizedTest
