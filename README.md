@@ -1,4 +1,7 @@
 # totp-kt - Kotlin OTP Library
+
+**CURRENTLY IN ALPHA**
+
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![CircleCI](https://dl.circleci.com/status-badge/img/gh/robinohs/totp-kt/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/robinohs/totp-kt/tree/main) [![codecov](https://codecov.io/gh/robinohs/totp-kt/branch/main/graph/badge.svg?token=2OT80TLHK9)](https://codecov.io/gh/robinohs/totp-kt) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=robinohs_totp-kt&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=robinohs_totp-kt&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=robinohs_totp-kt&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=robinohs_totp-kt&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt)
@@ -291,7 +294,7 @@ Entropy: log_2(62^{10}) = 59.542
 $$
 Passwords with a entropy >50 are considered to be secure.
 ## Spring Boot
-Instead of creating a new instance of any generator each time a token is checked, it is also possible to create a bean within Spring.
+Instead of creating a new instance of a generator each time a token is checked, it is also possible to create a bean within Spring.
 ```kotlin
 @Bean  
 fun totpGenerator(): TotpGenerator {  
@@ -308,7 +311,7 @@ fun recoveryCodeGenerator(): RecoveryCodeGenerator {
     return generator
 }
 ```
-You can then access the instance in the constructor of every class marked with @Component (@Service, ...).
+This bean can then be injected in the constructor of any class marked with @Component (@Service, ...).
 ```kotlin
 @Component  
 class CustomComponent(  
