@@ -85,13 +85,13 @@ internal class TotpGeneratorInstantTest {
 
     @Test
     fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
-        cut.tolerance = Duration.ofSeconds(50)
-        val instant = Instant.ofEpochMilli(1656118534840)
+        cut.tolerance = 2
+        val instant = Instant.ofEpochMilli(1656605624664)
 
-        val actual1 = cut.isCodeValidWithTolerance(secret, instant, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, instant, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, instant, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, instant, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, instant, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, instant, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, instant, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, instant, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertFalse(actual1) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
@@ -103,13 +103,13 @@ internal class TotpGeneratorInstantTest {
 
     @Test
     fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
-        cut.tolerance = Duration.ofSeconds(95)
-        val instant = Instant.ofEpochMilli(1656118534840)
+        cut.tolerance = 3
+        val instant = Instant.ofEpochMilli(1656605624664)
 
-        val actual1 = cut.isCodeValidWithTolerance(secret, instant, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, instant, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, instant, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, instant, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, instant, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, instant, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, instant, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, instant, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },

@@ -52,7 +52,7 @@ internal class TotpGeneratorTest {
             Executable {
                 Assertions.assertThrows(IllegalArgumentException::class.java) {
                     TotpGenerator(
-                        tolerance = Duration.ofSeconds(-5)
+                        tolerance = -4
                     )
                 }
             }
@@ -81,7 +81,7 @@ internal class TotpGeneratorTest {
                 Assertions.assertEquals(expected, actual) { "Expected and actual time period are equal." }
             },
             Executable {
-                val expected = Duration.ofSeconds(6)
+                val expected = 4
 
                 val actual = TotpGenerator(
                     tolerance = expected
@@ -146,7 +146,7 @@ internal class TotpGeneratorTest {
 
     @TestFactory
     fun testToleranceSetter_negativeToleranceIllegal() = listOf(
-        Duration.ofSeconds(-5), Duration.ofMinutes(-22),
+        -5, -22,
     ).map {
         DynamicTest.dynamicTest("setting tolerance to $it results in an IllegalArgumentException") {
             Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -157,7 +157,7 @@ internal class TotpGeneratorTest {
 
     @TestFactory
     fun testToleranceSetter_zeroOrPositiveDurationIsSet() = listOf(
-        Duration.ofSeconds(66), Duration.ofMinutes(0), Duration.ofDays(2)
+        3, 0, 2
     ).map { expected ->
         DynamicTest.dynamicTest("setting tolerance to $expected is allowed") {
             cut.tolerance = expected
@@ -248,42 +248,33 @@ internal class TotpGeneratorTest {
 
     @Test
     fun testIsCodeValidWithTolerance_sameTimeslot() {
-        val actual = cut.isCodeValidWithTolerance(secret, 1656115068732, "196157")
+        val actual = cut.isCodeValidWithTolerance(secret, 1656605624664, "929325")
 
         Assertions.assertTrue(actual) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT }
     }
 
     @Test
     fun testIsCodeValidWithTolerance_oldTimeslotButInTolerance() {
-        val actual = cut.isCodeValidWithTolerance(secret, 1656116160719, "853702")
+        val actual = cut.isCodeValidWithTolerance(secret, 1656605624664, "044157")
 
         Assertions.assertTrue(actual) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT }
     }
 
     @Test
     fun testIsCodeValidWithTolerance_oldTimeslotAndNotInTolerance() {
-        val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
+        val actual = cut.isCodeValidWithTolerance(secret, 1656605624664, "289971")
 
         Assertions.assertFalse(actual) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS }
     }
 
     @Test
-    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedTolerance() {
-        cut.tolerance = Duration.ofSeconds(10)
+    fun testIsCodeValidWithTolerance_multipleInExtendedTolerance() {
+        cut.tolerance = 2
 
-        val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
-
-        Assertions.assertTrue(actual) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS }
-    }
-
-    @Test
-    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedToleranceOf50Seconds() {
-        cut.tolerance = Duration.ofSeconds(50)
-
-        val actual1 = cut.isCodeValidWithTolerance(secret, 1656118534840, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, 1656118534840, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, 1656118534840, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, 1656118534840, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, 1656605624664, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, 1656605624664, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, 1656605624664, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, 1656605624664, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertFalse(actual1) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
@@ -294,13 +285,13 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedToleranceOf95Seconds() {
-        cut.tolerance = Duration.ofSeconds(95)
+    fun testIsCodeValidWithTolerance_allInExtendedTolerance() {
+        cut.tolerance = 3
 
-        val actual1 = cut.isCodeValidWithTolerance(secret, 1656118534840, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, 1656118534840, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, 1656118534840, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, 1656118534840, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, 1656605624664, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, 1656605624664, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, 1656605624664, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, 1656605624664, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },

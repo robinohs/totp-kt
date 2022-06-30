@@ -1,5 +1,8 @@
 package dev.robinohs.totpkt.otp.totp.timesupport
 
+import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
+import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
+import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
 import dev.robinohs.totpkt.otp.totp.TotpGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -11,9 +14,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
-import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
-import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
 /**
  * @author : Robin Ohs
  * @created : 26.06.2022
@@ -86,13 +86,13 @@ internal class TotpGeneratorDateTest {
 
     @Test
     fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
-        cut.tolerance = Duration.ofSeconds(50)
-        val date = Date.from(Instant.ofEpochMilli(1656118534840))
+        cut.tolerance = 2
+        val date = Date.from(Instant.ofEpochMilli(1656605624664))
 
-        val actual1 = cut.isCodeValidWithTolerance(secret, date, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, date, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, date, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, date, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, date, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, date, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, date, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, date, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertFalse(actual1) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
@@ -104,13 +104,13 @@ internal class TotpGeneratorDateTest {
 
     @Test
     fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
-        cut.tolerance = Duration.ofSeconds(95)
-        val date = Date.from(Instant.ofEpochMilli(1656118534840))
+        cut.tolerance = 3
+        val date = Date.from(Instant.ofEpochMilli(1656605624664))
 
-        val actual1 = cut.isCodeValidWithTolerance(secret, date, "956804")
-        val actual2 = cut.isCodeValidWithTolerance(secret, date, "364536")
-        val actual3 = cut.isCodeValidWithTolerance(secret, date, "326491")
-        val actual4 = cut.isCodeValidWithTolerance(secret, date, "110215")
+        val actual1 = cut.isCodeValidWithTolerance(secret, date, "644152")
+        val actual2 = cut.isCodeValidWithTolerance(secret, date, "289971")
+        val actual3 = cut.isCodeValidWithTolerance(secret, date, "044157")
+        val actual4 = cut.isCodeValidWithTolerance(secret, date, "929325")
 
         Assertions.assertAll(
             Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },

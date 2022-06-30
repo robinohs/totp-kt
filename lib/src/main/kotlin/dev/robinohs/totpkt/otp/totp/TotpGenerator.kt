@@ -3,7 +3,6 @@ package dev.robinohs.totpkt.otp.totp
 import dev.robinohs.totpkt.otp.hotp.HotpGenerator
 import java.time.Clock
 import java.time.Duration
-import java.time.Instant
 
 /**
  * @author : Robin Ohs
@@ -13,14 +12,14 @@ import java.time.Instant
 class TotpGenerator(
     codeLength: Int = 6,
     timePeriod: Duration = Duration.ofSeconds(30),
-    tolerance: Duration = Duration.ofSeconds(5),
+    tolerance: Int = 1,
     var clock: Clock = Clock.systemUTC(),
 ) : HotpGenerator(codeLength) {
 
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }
         require(timePeriod.toMillis() >= 1) { "Time period must be be >= 1." }
-        require(tolerance.toMillis() >= 0) { "Tolerance must be be >= 1." }
+        require(tolerance >= 0) { "Tolerance must be be >= 1." }
     }
 
     override var codeLength = codeLength
@@ -37,7 +36,7 @@ class TotpGenerator(
 
     var tolerance = tolerance
         set(value) {
-            require(value.toMillis() >= 0) { "Tolerance must be be >= 1." }
+            require(value >= 0) { "Tolerance must be be >= 0." }
             field = value
         }
 
@@ -52,9 +51,9 @@ class TotpGenerator(
     }
 
     /**
-     * Checks a generated code against a given code with a counter derived from the actual timestamp and given secret.
-     * Furthermore, the method considers a tolerance and also checks the given code against previous tokens generated
-     * within in a specified tolerance duration (Class property). Returns true if given code matches any of these tokens.
+     * Checks a generated code against a given code with a counter derived from the given millis and secret.
+     * In addition, the method considers a tolerance and also checks the given code against a number of previous tokens
+     * equal to the tolerance. Returns true if the given code matches any of these tokens.
      *
      * @param secret the secret that will be used as hashing key.
      * @param millis the timestamp as millis.
@@ -62,26 +61,31 @@ class TotpGenerator(
      * @return a boolean indicating if the generated and given code are equal.
      */
     fun isCodeValidWithTolerance(secret: ByteArray, millis: Long, givenCode: String): Boolean {
-        val timestamp = Instant.ofEpochMilli(millis)
-        val toleranceLowerBound = timestamp.minus(tolerance)
-        val validToken = getCodesInInterval(secret, toleranceLowerBound.toEpochMilli(), timestamp.toEpochMilli())
+        val validToken = getCodesInInterval(secret, millis)
         return givenCode in validToken
     }
 
-    private fun getCodesInInterval(secret: ByteArray, start: Long, end: Long): Set<String> {
-        val validToken = mutableSetOf<String>()
-        var iteratingTimestamp = computeTimeslotBeginning(start)
-        val endSlotBeginning = computeTimeslotBeginning(end)
-        while (iteratingTimestamp <= endSlotBeginning) {
-            validToken.add(generateCode(secret, iteratingTimestamp))
-            iteratingTimestamp += timePeriod.toMillis()
+    private fun getCodesInInterval(secret: ByteArray, start: Long): Set<String> {
+        val validTokens = mutableSetOf<String>()
+        validTokens.add(generateCode(secret, start))
+        var currentTime = start - timePeriod.toMillis()
+        repeat(tolerance) {
+            validTokens.add(generateCode(secret, currentTime))
+            currentTime -= timePeriod.toMillis()
         }
-        return validToken
+        return validTokens
     }
 
     private fun computeCounterForMillis(millis: Long): Long = Math.floorDiv(millis, timePeriod.toMillis())
 
-    private fun computeTimeslotBeginning(millis: Long): Long {
+
+    /**
+     * Calculates the start timestamp of the time slot in which the given timestamp lies.
+     *
+     * @param millis the timestamp as millis.
+     * @return the start timestamp.
+     */
+    fun calculateTimeslotBeginning(millis: Long): Long {
         val counter = computeCounterForMillis(millis)
         return timePeriod.toMillis() * counter
     }

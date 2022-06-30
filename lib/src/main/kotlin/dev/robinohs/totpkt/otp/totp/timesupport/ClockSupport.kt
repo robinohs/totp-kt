@@ -1,6 +1,7 @@
 package dev.robinohs.totpkt.otp.totp.timesupport
 
 import dev.robinohs.totpkt.otp.totp.TotpGenerator
+import java.time.Duration
 
 /**
  * Extension of TotpGenerator to support taking the realtime timestamps from the clock of the generator.
@@ -19,7 +20,8 @@ import dev.robinohs.totpkt.otp.totp.TotpGenerator
 fun TotpGenerator.generateCode(secret: ByteArray): String = generateCode(secret, clock.millis())
 
 /**
- * Checks a generated code with a counter derived from the actual timestamp and given secret against a given code.
+ * Checks a generated code against a given code with a counter derived from the actual timestamp of the generators clock
+ * and given secret.
  *
  * @param secret the secret that will be used as hashing key.
  * @param givenCode the code that should be validated against the generated code.
@@ -28,7 +30,10 @@ fun TotpGenerator.generateCode(secret: ByteArray): String = generateCode(secret,
 fun TotpGenerator.isCodeValid(secret: ByteArray, givenCode: String): Boolean = generateCode(secret) == givenCode
 
 /**
- * Checks a generated code with a counter derived from the actual timestamp and given secret against a given code.
+ * Checks a generated code against a given code with a counter derived from the actual timestamp of the generators clock
+ * and given secret.
+ * In addition, the method considers a tolerance and also checks the given code against a number of previous tokens
+ * equal to the tolerance. Returns true if the given code matches any of these tokens.
  *
  * @param secret the secret that will be used as hashing key.
  * @param givenCode the code that should be validated against the generated code.

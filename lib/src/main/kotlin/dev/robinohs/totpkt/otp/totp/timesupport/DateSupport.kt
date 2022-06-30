@@ -1,6 +1,8 @@
 package dev.robinohs.totpkt.otp.totp.timesupport
 
 import dev.robinohs.totpkt.otp.totp.TotpGenerator
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 
 /**
@@ -33,6 +35,8 @@ fun TotpGenerator.isCodeValid(secret: ByteArray, date: Date, givenCode: String):
 
 /**
  * Checks a generated code with a counter derived from a given [Date] and given secret against a given code.
+ * In addition, the method considers a tolerance and also checks the given code against a number of previous tokens
+ * equal to the tolerance. Returns true if the given code matches any of these tokens.
  *
  * @param secret the secret that will be used as hashing key.
  * @param date the date which is converted into a timestamp.
