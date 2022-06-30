@@ -1,7 +1,7 @@
 /**
  * @author : Robin Ohs
  * @created : 30.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 object TestMessageConstants {
     const val CODE_WAS_NOT_THE_EXPECTED_ONE = "Code was not the expected one."

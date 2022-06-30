@@ -7,7 +7,7 @@ import org.junit.jupiter.api.function.Executable
 /**
  * @author : Robin Ohs
  * @created : 30.06.2022
- * @since : 0.0.1
+ * @since : 1.0.0
  */
 internal class Base32SecretTest {
 
