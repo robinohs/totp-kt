@@ -1,6 +1,5 @@
 package dev.robinohs.totpkt.otp.hotp
 
-import org.apache.commons.codec.binary.Base32
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 
@@ -19,8 +18,11 @@ internal class HotpGeneratorTest {
         cut = HotpGenerator()
     }
 
+    /**
+     * Constructor has logic, so it needs to be tested.
+     */
     @Test
-    fun `constructor validates arguments`() {
+    fun constructorTest_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             HotpGenerator(
                 codeLength = -5
@@ -28,8 +30,11 @@ internal class HotpGeneratorTest {
         }
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
     @TestFactory
-    fun `HotpGenerator codeLength cannot be set to a negative number`() = listOf(
+    fun codeLengthSetterTest_negativeNumberIllegal() = listOf(
         -55, -1
     ).map {
         DynamicTest.dynamicTest("setting codeLength to $it results in an IllegalArgumentException") {
@@ -39,11 +44,29 @@ internal class HotpGeneratorTest {
         }
     }
 
-    @Test
-    fun `generateCode produces 6 digit long codes`() {
-        val expected = "123379"
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
+    @TestFactory
+    fun codeLengthSetterTest_zeroOrPositiveNumberIsSet() = listOf(
+        0, 1, 10, 13
+    ).map { expected ->
+        DynamicTest.dynamicTest("setting codeLength to $expected is allowed") {
+            cut.codeLength = expected
 
-        val actual = cut.generateCode(Base32().decode(secret), 1656090712)
+            val actual = cut.codeLength
+
+            Assertions.assertEquals(expected, actual) {
+                "Setter did not set codeLength to $expected, instead was $actual."
+            }
+        }
+    }
+
+    @Test
+    fun generateCodeTest_validCodes() {
+        val expected = "196157"
+
+        val actual = cut.generateCode(secret, 55203835)
 
         Assertions.assertEquals(expected, actual) {
             "Code was not the expected one."
@@ -51,9 +74,9 @@ internal class HotpGeneratorTest {
     }
 
     @Test
-    fun `generateCode produces 6 digit long codes with other counter`() {
-        val first = cut.generateCode(Base32().decode(secret), 1656090713)
-        val second = cut.generateCode(Base32().decode(secret), 1656090714)
+    fun generateCodeTest_differentCountersHaveDifferentCode() {
+        val first = cut.generateCode(secret, 1656090713)
+        val second = cut.generateCode(secret, 1656090714)
 
         Assertions.assertNotEquals(first, second) {
             "Codes should not be the same for the given arguments."
@@ -61,9 +84,9 @@ internal class HotpGeneratorTest {
     }
 
     @Test
-    fun `generateCode produces 6 digit long codes with different secrets`() {
-        val first = cut.generateCode(Base32().decode(secret), 1656090713)
-        val second = cut.generateCode(Base32().decode(secret2), 1656090713)
+    fun generateCodeTest_differentSecretsHaveDifferentCode() {
+        val first = cut.generateCode(secret, 1656090713)
+        val second = cut.generateCode(secret2, 1656090713)
 
         Assertions.assertNotEquals(first, second) {
             "Codes should not be the same for two different secrets."
@@ -71,7 +94,7 @@ internal class HotpGeneratorTest {
     }
 
     @Test
-    fun `isCodeValid checks codes correctly`() {
+    fun isCodeValidTest() {
         val actual1 = cut.isCodeValid(secret, 55203835, "196157")
         val actual2 = cut.isCodeValid(secret, 55203835, "355908")
 
