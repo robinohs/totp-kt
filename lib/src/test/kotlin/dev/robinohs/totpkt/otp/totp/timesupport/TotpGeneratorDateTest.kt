@@ -85,7 +85,7 @@ internal class TotpGeneratorDateTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf2() {
         cut.tolerance = 2
         val date = Date.from(Instant.ofEpochMilli(1656605624664))
 
@@ -103,7 +103,7 @@ internal class TotpGeneratorDateTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf3() {
         cut.tolerance = 3
         val date = Date.from(Instant.ofEpochMilli(1656605624664))
 

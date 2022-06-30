@@ -99,7 +99,7 @@ internal class TotpGeneratorClockTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf2() {
         cut.tolerance = 2
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656605624664), ZoneId.systemDefault())
 
@@ -117,7 +117,7 @@ internal class TotpGeneratorClockTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf3() {
         cut.tolerance = 3
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656605624664), ZoneId.systemDefault())
 

@@ -268,7 +268,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun testIsCodeValidWithTolerance_multipleInExtendedTolerance() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf2() {
         cut.tolerance = 2
 
         val actual1 = cut.isCodeValidWithTolerance(secret, 1656605624664, "644152")
@@ -285,7 +285,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun testIsCodeValidWithTolerance_allInExtendedTolerance() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf3() {
         cut.tolerance = 3
 
         val actual1 = cut.isCodeValidWithTolerance(secret, 1656605624664, "644152")

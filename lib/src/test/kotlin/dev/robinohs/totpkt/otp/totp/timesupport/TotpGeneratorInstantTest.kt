@@ -84,7 +84,7 @@ internal class TotpGeneratorInstantTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 50s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf2() {
         cut.tolerance = 2
         val instant = Instant.ofEpochMilli(1656605624664)
 
@@ -102,7 +102,7 @@ internal class TotpGeneratorInstantTest {
     }
 
     @Test
-    fun `isCodeValidWithTolerance checks codes correctly if token is expired with 95s tolerance`() {
+    fun testIsCodeValidWithTolerance_threeOldTokenWithToleranceOf3() {
         cut.tolerance = 3
         val instant = Instant.ofEpochMilli(1656605624664)
 
