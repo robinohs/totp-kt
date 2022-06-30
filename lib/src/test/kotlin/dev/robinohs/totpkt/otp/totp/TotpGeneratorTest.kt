@@ -300,4 +300,35 @@ internal class TotpGeneratorTest {
             Executable { Assertions.assertTrue(actual4) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } }
         )
     }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1656605624624, 1656605610000",
+        "1656605654664, 1656605640000",
+        "1656605656367, 1656605640000",
+        "1656605658664, 1656605640000",
+        "1656605684614, 1656605670000",
+    )
+    fun testCalculateTimeslotBeginning(timestamp: Long, expected: Long) {
+        val actual = cut.calculateTimeslotBeginning(timestamp)
+
+        Assertions.assertEquals(expected, actual) { "Time slot beginning was expected one. $expected not equal to $actual." }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "1656605610000, 30",
+        "1656605640000, 30",
+        "1656605670000, 30",
+        "1656605685000, 15",
+        "1656605695000, 5",
+        "1656605669000, 1",
+    )
+    fun testCalculateRemainingTime(timestamp: Long, durationInSeconds: Long) {
+        val expected = Duration.ofSeconds(durationInSeconds)
+
+        val actual = cut.calculateRemainingTime(timestamp)
+
+        Assertions.assertEquals(expected, actual) { "Time slot beginning was expected one. $expected not equal to $actual." }
+    }
 }

@@ -45,3 +45,22 @@ fun TotpGenerator.isCodeValid(secret: ByteArray, date: Date, givenCode: String):
  */
 fun TotpGenerator.isCodeValidWithTolerance(secret: ByteArray, date: Date, givenCode: String): Boolean =
     isCodeValidWithTolerance(secret, date.time, givenCode)
+
+/**
+ * Calculates the start timestamp as [Date] of the time slot in which the actual timestamp lies.
+ *
+ * @return the start timestamp as [Date].
+ */
+fun TotpGenerator.calculateTimeslotBeginning(date: Date): Date {
+    val startTimestamp = calculateTimeslotBeginning(date.time)
+    return Date.from(Instant.ofEpochMilli(startTimestamp))
+}
+
+
+/**
+ * Calculates the remaining duration of the time slot in which the actual timestamp as [Date] lies.
+ *
+ * @return the remaining duration of the time slot.
+ */
+fun TotpGenerator.calculateRemainingTime(date: Date): Duration =
+    calculateRemainingTime(date.time)

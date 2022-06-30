@@ -41,3 +41,19 @@ fun TotpGenerator.isCodeValid(secret: ByteArray, givenCode: String): Boolean = g
  */
 fun TotpGenerator.isCodeValidWithTolerance(secret: ByteArray, givenCode: String): Boolean =
     isCodeValidWithTolerance(secret, clock.millis(), givenCode)
+
+/**
+ * Calculates the start timestamp of the time slot in which the actual timestamp lies.
+ *
+ * @return the start timestamp.
+ */
+fun TotpGenerator.calculateTimeslotBeginning(): Long =
+    calculateTimeslotBeginning(clock.millis())
+
+/**
+ * Calculates the remaining duration of the time slot in which the actual timestamp lies.
+ *
+ * @return the remaining duration of the time slot.
+ */
+fun TotpGenerator.calculateRemainingTime(): Duration =
+    calculateRemainingTime(clock.millis())

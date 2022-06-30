@@ -89,4 +89,16 @@ class TotpGenerator(
         val counter = computeCounterForMillis(millis)
         return timePeriod.toMillis() * counter
     }
+
+    /**
+     * Calculates the remaining duration of the time slot in which the given timestamp lies.
+     *
+     * @param millis the timestamp as millis.
+     * @return the remaining duration of the time slot.
+     */
+    fun calculateRemainingTime(millis: Long): Duration {
+        val beginning = calculateTimeslotBeginning(millis)
+        val end = beginning + timePeriod.toMillis()
+        return Duration.ofMillis(end - millis)
+    }
 }

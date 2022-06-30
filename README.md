@@ -146,7 +146,9 @@ totpGenerator.isCodeValid(secret, Instant(), clientCode)
 totpGenerator.isCodeValid(secret, Date(), clientCode)
 ```
 #### Method: Validate Code With Tolerance
-The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
+Compares a generated code to a given code using a counter derived from the current timestamp and a given secret. 
+In addition, the method considers a tolerance and also checks the given code against a number of previous tokens
+equal to the tolerance. Returns true if the given code matches any of these tokens.
 ```kotlin
 val secret = some_base32_encoded_secret_as_bytearray
 val clientCode = given_client_code
@@ -161,10 +163,40 @@ totpGenerator.isCodeValidWithTolerance(secret, Instant(), clientCode)
 // with Date
 totpGenerator.isCodeValidWithTolerance(secret, Date(), clientCode)
 ```
+#### Method: Timeslot beginning
+Calculates the start timestamp of the time slot in which the actual or given timestamp lies.
+```kotlin
+// takes actual timestamp from clock, returns millis
+totpGenerator.calculateTimeslotBeginning()
+```
+If one would like to specify a time:
+```kotlin
+// with millis, returns millis
+totpGenerator.calculateTimeslotBeginning(1656459878681, clientCode)
+// with Instant, returns Instant
+totpGenerator.calculateTimeslotBeginning(Instant(), clientCode)
+// with Date, returns Date
+totpGenerator.calculateTimeslotBeginning(Date(), clientCode)
+```
+#### Method: Remaining time
+Calculates the remaining duration of the time slot in which the actual or given timestamp lies.
+```kotlin
+// takes actual timestamp from clock
+totpGenerator.calculateRemainingTime()
+```
+If one would like to specify a time:
+```kotlin
+// with millis
+totpGenerator.calculateRemainingTime(1656459878681)
+// with Instant
+totpGenerator.calculateRemainingTime(Instant())
+// with Date
+totpGenerator.calculateRemainingTime(Date())
+```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
 #### Clock
-The clock is the time source for the generator if no time is passed as an argument to the generate or validate function.
+The clock is the time source for the generator if no time is passed as an argument to the generateCode or validateCode method.
 ```kotlin
 val totpGenerator = TotpGenerator(clock = Clock.systemUTC())
 // or
@@ -175,10 +207,12 @@ totpGenerator.clock = Clock.systemUTC()
 The time period is the duration of every time step in which the generated code is the same. This is needed as due to delays (e.g., network delay) the server will not generate the code with the same timestamp as the client. As a compromise between security and usability the default time step is set as 30 seconds.
 > A time period of 30 seconds is used by the Google or Mircrosoft Authenticator app.
 #### Tolerance
-The tolerance is a duration that is subtracted from the timestamp the server creates when he generates a code in the isValidWithTolerance merthod. All codes generated within this period are matched against the client's token. If any of them matches, the code is accepted.
-#### Code Length
+The tolerance specifies a number of previous tokens that are also accepted as valid tokens in addition to the current valid token.
+> A tolerance of 1 token is set as default. In [RFC6238#5.2](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2) 
+> a time step is recommended to compensate for delays such as network delay.
+#### Code length
 The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
-> A length of 6 digits is used by the Google or Mircrosoft Authenticator app.
+> A length of 6 digits is used by the Google or Microsoft Authenticator app.
 ## HOTP (HMAC-based One-Time Password)
 The HMAC-based one-time password method generates one-time passwords by using a shared secret in combination with a counter as the source of uniqueness. The major problem of this approach is the synchronization of the counter between the client and the server. Synchronization is out of scope for this library and therefore needs to be implemented by the consumer. A method for re-synchronization is described in the specification [RFC4226#7.4](https://datatracker.ietf.org/doc/html/rfc4226#section-7.4).
 
@@ -221,7 +255,7 @@ totpGenerator.isCodeValid(secret, counter, clientCode)
 ```
 ### Customize properties
 It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
-#### Code Length
+#### Code length
 The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
 
 ## Secret generator
@@ -237,7 +271,7 @@ If you want to generate a secret that can be used as a shared secret between the
 ```kotlin
 val base32Secret: Base32Secret = secretGenerator.generateSecret()
 ```
-#### Class: Base32Secret
+#### Data Class: Base32Secret
 The Base32Secret data class contains a secret in the form of a bytearray and a string.
 ```kotlin
 val base32Secret: Base32Secret = secretGenerator.generateSecret()
