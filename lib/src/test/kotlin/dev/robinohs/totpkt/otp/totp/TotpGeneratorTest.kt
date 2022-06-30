@@ -1,15 +1,13 @@
 package dev.robinohs.totpkt.otp.totp
 
+import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
+import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
+import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.time.Duration
-
-private const val FIRST_CODE_WAS_NOT_THE_EXPECTED_ONE = "First code was not the expected one."
-private const val SECOND_CODE_WAS_NOT_THE_EXPECTED_ONE = "Second code was not the expected one."
-private const val CODE_SHOULD_NOT_BE_VALID_BUT_WAS = "Code should not be valid but was."
-private const val CODE_SHOULD_BE_VALID_BUT_WAS_NOT = "Code should be valid but was not."
 
 /**
  * @author : Robin Ohs
@@ -180,8 +178,8 @@ internal class TotpGeneratorTest {
         val actual2 = cut.generateCode(secret, 1656114891677)
 
         Assertions.assertAll(
-            Executable { Assertions.assertEquals(expected, actual1) { FIRST_CODE_WAS_NOT_THE_EXPECTED_ONE } },
-            Executable { Assertions.assertEquals(expected, actual2) { SECOND_CODE_WAS_NOT_THE_EXPECTED_ONE } },
+            Executable { Assertions.assertEquals(expected, actual1) { CODE_WAS_NOT_THE_EXPECTED_ONE } },
+            Executable { Assertions.assertEquals(expected, actual2) { CODE_WAS_NOT_THE_EXPECTED_ONE } },
         )
     }
 

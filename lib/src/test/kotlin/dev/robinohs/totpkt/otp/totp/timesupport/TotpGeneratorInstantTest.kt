@@ -1,5 +1,8 @@
 package dev.robinohs.totpkt.otp.totp.timesupport
 
+import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
+import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
+import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
 import dev.robinohs.totpkt.otp.totp.TotpGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -9,11 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.time.Duration
 import java.time.Instant
-
-private const val CODE_WAS_NOT_THE_EXPECTED_ONE = "Code was not the expected one."
-private const val CODE_SHOULD_NOT_BE_VALID_BUT_WAS = "Code should not be valid but was."
-private const val CODE_SHOULD_BE_VALID_BUT_WAS_NOT = "Code should be valid but was not."
-
 
 /**
  * @author : Robin Ohs

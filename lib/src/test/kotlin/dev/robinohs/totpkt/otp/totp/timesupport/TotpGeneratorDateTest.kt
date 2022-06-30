@@ -11,10 +11,9 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-private const val CODE_WAS_NOT_THE_EXPECTED_ONE = "Code was not the expected one."
-private const val CODE_SHOULD_NOT_BE_VALID_BUT_WAS = "Code should not be valid but was."
-private const val CODE_SHOULD_BE_VALID_BUT_WAS_NOT = "Code should be valid but was not."
-
+import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
+import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
+import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
 /**
  * @author : Robin Ohs
  * @created : 26.06.2022
