@@ -17,7 +17,7 @@ internal class SecretGeneratorTest {
     private lateinit var cut: SecretGenerator
 
     @BeforeEach
-    fun init() {
+    fun testInit() {
         val randomGenerator = RandomGenerator(
             charPool = listOf('A', 'B'),
             random = Random(5)
@@ -26,7 +26,7 @@ internal class SecretGeneratorTest {
     }
 
     @Test
-    fun generateSecretTest_defaultArgument() {
+    fun testGenerateSecret_defaultArgument() {
         val expected = "IJAUCQSBIJAUEQKB"
         val actual = cut.generateSecret().secretAsString
 
@@ -42,7 +42,7 @@ internal class SecretGeneratorTest {
         "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
         "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
     )
-    fun generateSecretTest_secretAsString(
+    fun testGenerateSecret_secretAsString(
         length: Int,
         expected: String
     ) {
@@ -60,7 +60,7 @@ internal class SecretGeneratorTest {
         "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
         "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
     )
-    fun generateSecretTest_secretAsByteArray(
+    fun testGenerateSecret_secretAsByteArray(
         length: Int,
         expected: String
     ) {
@@ -79,7 +79,7 @@ internal class SecretGeneratorTest {
         "40",
         "50",
     )
-    fun generateSecretTest_byteArrayAndStringAreEqual(length: Int) {
+    fun testGenerateSecret_byteArrayAndStringAreEqual(length: Int) {
         val base32Secret = cut.generateSecret(length)
         val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
         val secretAsString = base32Secret.secretAsString

@@ -23,12 +23,12 @@ internal class TotpGeneratorDateTest {
     private lateinit var cut: TotpGenerator
 
     @BeforeEach
-    fun init() {
+    fun testInit() {
         cut = TotpGenerator()
     }
 
     @Test
-    fun generateCodeTest_datesMatchAuthenticatorGeneratedCode() {
+    fun testGenerateCode_datesMatchAuthenticatorGeneratedCode() {
         val expected = "503317"
 
         val actual1 = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(1656114738767)))
@@ -47,7 +47,7 @@ internal class TotpGeneratorDateTest {
         "1666314881887",
         "1696114888827",
     )
-    fun generateCodeTest_differentSecretsHaveDifferentCodes(timestamp: Long) {
+    fun testGenerateCode_differentSecretsHaveDifferentCodes(timestamp: Long) {
         val actual1 = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(timestamp)))
         val actual2 = cut.generateCode(secret2, Date.from(Instant.ofEpochMilli(timestamp)))
 
@@ -62,7 +62,7 @@ internal class TotpGeneratorDateTest {
         "10",
         "12",
     )
-    fun generateCodeTest_codeLengthMatchesConfig(expected: Int) {
+    fun testGenerateCode_codeLengthMatchesConfig(expected: Int) {
         cut.codeLength = expected
 
         val actual = cut.generateCode(secret, Date.from(Instant.ofEpochMilli(1656114738767))).length
@@ -71,7 +71,7 @@ internal class TotpGeneratorDateTest {
     }
 
     @Test
-    fun isCodeValidTest_checksCodesCorrectly() {
+    fun testIsCodeValid_checksCodesCorrectly() {
         val actual1 = cut.isCodeValid(secret, Date.from(Instant.ofEpochMilli(1656115068732)), "196157")
         val actual2 = cut.isCodeValid(secret, Date.from(Instant.ofEpochMilli(1656115073318)), "355908")
 

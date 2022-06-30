@@ -18,7 +18,7 @@ internal class TotpGeneratorTest {
     private lateinit var cut: TotpGenerator
 
     @BeforeEach
-    fun init() {
+    fun testInit() {
         cut = TotpGenerator()
     }
 
@@ -26,7 +26,7 @@ internal class TotpGeneratorTest {
      * Constructor has logic, so it needs to be tested.
      */
     @Test
-    fun constructorTest_validatesArguments() {
+    fun testConstructor_validatesArguments() {
         Assertions.assertAll(
             Executable {
                 Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -63,7 +63,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun codeLengthSetterTest_negativeNumberIllegal() = listOf(
+    fun testCodeLengthSetter_negativeNumberIllegal() = listOf(
         -55, -1
     ).map {
         DynamicTest.dynamicTest("setting codeLength to $it results in an IllegalArgumentException") {
@@ -77,7 +77,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun codeLengthSetterTest_zeroOrPositiveNumberIsSet() = listOf(
+    fun testCodeLengthSetter_zeroOrPositiveNumberIsSet() = listOf(
         0, 1, 10, 13
     ).map { expected ->
         DynamicTest.dynamicTest("setting codeLength to $expected is allowed") {
@@ -95,7 +95,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun timePeriodSetterTest_zeroLengthOrNegativeDurationIllegal() = listOf(
+    fun testTimePeriodSetter_zeroLengthOrNegativeDurationIllegal() = listOf(
         Duration.ofSeconds(0), Duration.ofSeconds(-5), Duration.ofMinutes(-22),
     ).map {
         DynamicTest.dynamicTest("setting timePeriod to $it results in an IllegalArgumentException") {
@@ -109,7 +109,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun timePeriodSetterTest_zeroOrPositiveNumberIsSet() = listOf(
+    fun testTimePeriodSetter_zeroOrPositiveNumberIsSet() = listOf(
         Duration.ofSeconds(66), Duration.ofMinutes(2), Duration.ofDays(2)
     ).map { expected ->
         DynamicTest.dynamicTest("setting timePeriod to $expected is allowed") {
@@ -127,7 +127,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun toleranceSetterTest_negativeToleranceIllegal() = listOf(
+    fun testToleranceSetter_negativeToleranceIllegal() = listOf(
         Duration.ofSeconds(-5), Duration.ofMinutes(-22),
     ).map {
         DynamicTest.dynamicTest("setting tolerance to $it results in an IllegalArgumentException") {
@@ -141,7 +141,7 @@ internal class TotpGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun toleranceSetterTest_zeroOrPositiveDurationIsSet() = listOf(
+    fun testToleranceSetter_zeroOrPositiveDurationIsSet() = listOf(
         Duration.ofSeconds(66), Duration.ofMinutes(0), Duration.ofDays(2)
     ).map { expected ->
         DynamicTest.dynamicTest("setting tolerance to $expected is allowed") {
@@ -156,7 +156,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun generateCodeTest_codesMatchAuthenticatorGeneratedCode() {
+    fun testGenerateCode_codesMatchAuthenticatorGeneratedCode() {
         val expected = "316152"
 
         val actual1 = cut.generateCode(secret, 1656114883887)
@@ -175,7 +175,7 @@ internal class TotpGeneratorTest {
         "1666314881887",
         "1696114888827",
     )
-    fun generateCodeTest_differentSecretsHaveDifferentCodes(timestamp: Long) {
+    fun testGenerateCode_differentSecretsHaveDifferentCodes(timestamp: Long) {
         val actual1 = cut.generateCode(secret, timestamp)
         val actual2 = cut.generateCode(secret2, timestamp)
 
@@ -190,7 +190,7 @@ internal class TotpGeneratorTest {
         "10",
         "12",
     )
-    fun generateCodeTest_codeLengthMatchesConfig(expected: Int) {
+    fun testGenerateCode_codeLengthMatchesConfig(expected: Int) {
         cut.codeLength = expected
 
         val actual = cut.generateCode(secret, 1656115068732).length
@@ -199,7 +199,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidTest_checksCodesCorrectly() {
+    fun testIsCodeValid_checksCodesCorrectly() {
         val actual1 = cut.isCodeValid(secret, 1656115068732, "196157")
         val actual2 = cut.isCodeValid(secret, 1656115073318, "355908")
 
@@ -210,7 +210,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidTest_differentSecretsHaveDifferentCodes() {
+    fun testIsCodeValid_differentSecretsHaveDifferentCodes() {
         val actual1 = cut.isCodeValid(secret, 1656115068732, "196157")
         val actual2 = cut.isCodeValid(secret2, 1656115068732, "196157")
 
@@ -221,7 +221,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidTest_differentTimestampsHaveDifferentCodes() {
+    fun testIsCodeValid_differentTimestampsHaveDifferentCodes() {
         val actual1 = cut.isCodeValid(secret, 1656115068732, "196157")
         val actual2 = cut.isCodeValid(secret, 1656115073318, "355908")
 
@@ -232,28 +232,28 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_sameTimeslot() {
+    fun testIsCodeValidWithTolerance_sameTimeslot() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656115068732, "196157")
 
         Assertions.assertTrue(actual) { "Code should be valid but was not." }
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_oldTimeslotButInTolerance() {
+    fun testIsCodeValidWithTolerance_oldTimeslotButInTolerance() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656116160719, "853702")
 
         Assertions.assertTrue(actual) { "Code should be valid but was not." }
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_oldTimeslotAndNotInTolerance() {
+    fun testIsCodeValidWithTolerance_oldTimeslotAndNotInTolerance() {
         val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
 
         Assertions.assertFalse(actual) { "Code should not be valid but was." }
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_oldTimeSlotButInExtendedTolerance() {
+    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedTolerance() {
         cut.tolerance = Duration.ofSeconds(10)
 
         val actual = cut.isCodeValidWithTolerance(secret, 1656116466490, "452088")
@@ -262,7 +262,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_oldTimeSlotButInExtendedToleranceOf50Seconds() {
+    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedToleranceOf50Seconds() {
         cut.tolerance = Duration.ofSeconds(50)
 
         val actual1 = cut.isCodeValidWithTolerance(secret, 1656118534840, "956804")
@@ -279,7 +279,7 @@ internal class TotpGeneratorTest {
     }
 
     @Test
-    fun isCodeValidWithToleranceTest_oldTimeSlotButInExtendedToleranceOf95Seconds() {
+    fun testIsCodeValidWithTolerance_oldTimeSlotButInExtendedToleranceOf95Seconds() {
         cut.tolerance = Duration.ofSeconds(95)
 
         val actual1 = cut.isCodeValidWithTolerance(secret, 1656118534840, "956804")

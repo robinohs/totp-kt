@@ -13,7 +13,7 @@ internal class RandomGeneratorTest {
     private lateinit var cut: RandomGenerator
 
     @BeforeEach
-    fun init() {
+    fun testInit() {
         cut = RandomGenerator()
     }
 
@@ -21,7 +21,7 @@ internal class RandomGeneratorTest {
      * Constructor has logic, so it needs to be tested.
      */
     @Test
-    fun constructorTest_validatesArguments() {
+    fun testConstructor_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             RandomGenerator(
                 charPool = listOf()
@@ -33,7 +33,7 @@ internal class RandomGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @Test
-    fun charPoolSetterTest_emptyListIllegal() {
+    fun testCharPoolSetter_emptyListIllegal() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             cut.charPool = listOf()
         }
@@ -43,7 +43,7 @@ internal class RandomGeneratorTest {
      * Setter has logic, so it needs to be tested.
      */
     @TestFactory
-    fun charPoolSetterTest_nonEmptyListIsSet() = listOf(
+    fun testCharPoolSetter_nonEmptyListIsSet() = listOf(
         listOf('A', 'B'), listOf('F', 'H', 'Z'), listOf('&')
     ).map { expected ->
         DynamicTest.dynamicTest("setting charPool to $expected is allowed") {
@@ -58,7 +58,7 @@ internal class RandomGeneratorTest {
     }
 
     @TestFactory
-    fun generateRandomStringFromCharPoolTest_negativeLengthIllegal() = listOf(
+    fun testGenerateRandomStringFromCharPool_negativeLengthIllegal() = listOf(
         -1,
         -5,
         -55
@@ -71,7 +71,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun generateRandomStringFromCharPoolTest_zeroLength() {
+    fun testGenerateRandomStringFromCharPool_zeroLength() {
         cut.charPool = listOf('A', 'B')
         val expected = ""
 
@@ -83,7 +83,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun generateRandomStringFromCharPoolTest_Seed1() {
+    fun testGenerateRandomStringFromCharPool_Seed1() {
         cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
         cut.random = Random(55)
         val expected = "HBHBIICD"
@@ -96,7 +96,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun generateRandomStringFromCharPoolTest_Seed2(){
+    fun testGenerateRandomStringFromCharPool_Seed2(){
         cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
         cut.random = Random(555)
         val expected = "DFHIBGIC"
