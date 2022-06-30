@@ -21,7 +21,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @Test
-    fun `constructor validates arguments`() {
+    fun constructorTest_validatesArguments() {
         Assertions.assertAll(
             Executable {
                 Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -54,8 +54,11 @@ internal class RecoveryCodeGeneratorTest {
         )
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
     @TestFactory
-    fun `RecoveryCodeGenerator number of blocks cannot be set to 0 or a negative number`() = listOf(
+    fun numberOfBlocksSetterTest_zeroOrNegativeNumberIllegal() = listOf(
         -55, -1, 0
     ).map {
         DynamicTest.dynamicTest("setting numberOfBlocks to $it results in an IllegalArgumentException") {
@@ -65,8 +68,29 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
     @TestFactory
-    fun `RecoveryCodeGenerator block length cannot be set to 0 or a negative number`() = listOf(
+    fun numberOfBlocksSetterTest_positiveNumberIsSet() = listOf(
+        55, 4, 3
+    ).map { expected ->
+        DynamicTest.dynamicTest("setting numberOfBlocks to $expected is allowed") {
+            cut.numberOfBlocks = expected
+
+            val actual = cut.numberOfBlocks
+
+            Assertions.assertEquals(expected, actual) {
+                "Setter did not set number to $expected, instead was $actual."
+            }
+        }
+    }
+
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
+    @TestFactory
+    fun blockLengthSetterTest_zeroOrNegativeNumberIllegal() = listOf(
         -55, -1, 0
     ).map {
         DynamicTest.dynamicTest("setting blockLength to $it results in an IllegalArgumentException") {
@@ -76,8 +100,26 @@ internal class RecoveryCodeGeneratorTest {
         }
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
+    @TestFactory
+    fun blockLengthSetterTest_positiveNumberIsSet() = listOf(
+        55, 4, 3
+    ).map { expected ->
+        DynamicTest.dynamicTest("setting blockLength to $expected is allowed") {
+            cut.blockLength = expected
+
+            val actual = cut.blockLength
+
+            Assertions.assertEquals(expected, actual) {
+                "Setter did not set number to $expected, instead was $actual."
+            }
+        }
+    }
+
     @Test
-    fun `generateSingleRecoveryCode has correct format and charset with default values`() {
+    fun generateRecoveryCodeTest_formatUnchangedConfig() {
         val expectedFormatRegex =
             "[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
@@ -89,7 +131,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateSingleRecoveryCode returns a code with correct length`() = mapOf(
+    fun generateRecoveryCodeTest_length() = mapOf(
         DEFAULT_NUMBER_OF_BLOCKS to DEFAULT_LENGTH_OF_BLOCK,
         10 to 8,
         12 to 5,
@@ -110,7 +152,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateSingleRecoveryCode has correct format and charset with changed block values`() = mapOf(
+    fun generateRecoveryCodeTest_format() = mapOf(
         DEFAULT_NUMBER_OF_BLOCKS to DEFAULT_LENGTH_OF_BLOCK,
         10 to 8,
         12 to 5,
@@ -131,7 +173,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @Test
-    fun `generateSingleRecoveryCode uses correct charset with changed values`() {
+    fun generateRecoveryCodeTest_changedCharset() {
         val charPool = listOf('A', 'B', 'C', 'D')
         cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
@@ -144,7 +186,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateRecoveryCodes throws an IllegalArgumentException for negative number of codes`() = listOf(
+    fun generateRecoveryCodesTest_NegativeNumberOfCodes() = listOf(
         -55, -1
     ).map {
         DynamicTest.dynamicTest("generate $it codes results in an IllegalArgumentException") {
@@ -155,7 +197,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @Test
-    fun `generateRecoveryCodes creates the default number of recovery codes if no argument given`() {
+    fun generateRecoveryCodesTest_defaultValue() {
         val expectedNumber = RecoveryCodeConfig.DEFAULT_NUMBER_OF_RECOVERY_CODES
 
         val actualNumber = cut.generateRecoveryCodes().size
@@ -166,7 +208,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateRecoveryCodes creates the given number of recovery codes`() = listOf(
+    fun generateRecoveryCodesTest_validValues() = listOf(
         0, 5, 10, 12
     ).map { expected ->
         DynamicTest.dynamicTest("did not generate $expected codes") {
@@ -179,7 +221,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateRecoveryCodes creates recovery codes with the correct format`(): List<DynamicTest> {
+    fun generateRecoveryCodesTest_format(): List<DynamicTest> {
         val expectedFormatRegex =
             "[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-z\\d]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
 
@@ -193,7 +235,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateRecoveryCodes creates recovery codes with the correct format with changed values`(): List<DynamicTest> {
+    fun generateRecoveryCodesTest_formatWithChangedConfig(): List<DynamicTest> {
         cut.numberOfBlocks = 10
         cut.blockLength = 8
         val expectedFormatRegex = "[A-z\\d]{8}((-[A-z\\d]{8})+)?".toRegex()
@@ -208,7 +250,7 @@ internal class RecoveryCodeGeneratorTest {
     }
 
     @TestFactory
-    fun `generateRecoveryCodes creates recovery codes with characters from the changed char pool`(): List<DynamicTest> {
+    fun generateRecoveryCodesTest_formatWithChangedCharset(): List<DynamicTest> {
         val charPool = listOf('A', 'B', 'C', 'D')
         cut.randomGenerator = RandomGenerator(charPool = charPool)
         val expectedFormatRegex = "[A-D]{$DEFAULT_LENGTH_OF_BLOCK}((-[A-D]{$DEFAULT_LENGTH_OF_BLOCK})+)?".toRegex()
