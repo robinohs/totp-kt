@@ -18,7 +18,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun `constructor validates arguments`() {
+    fun constructorTest_validatesArguments() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             RandomGenerator(
                 charPool = listOf()
@@ -26,15 +26,36 @@ internal class RandomGeneratorTest {
         }
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
     @Test
-    fun `RandomGenerator char pool cannot be set to an empty list`() {
+    fun charPoolSetterTest_emptyListIllegal() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             cut.charPool = listOf()
         }
     }
 
+    /**
+     * Setter has logic, so it needs to be tested.
+     */
     @TestFactory
-    fun `generateRandomStringFromCharPool throws an IllegalArgumentException for a negative length argument`() = listOf(
+    fun charPoolSetterTest_nonEmptyListIllegal() = listOf(
+        listOf('A', 'B'), listOf('F', 'H', 'Z'), listOf('&')
+    ).map { expected ->
+        DynamicTest.dynamicTest("setting charPool to $expected is allowed") {
+            cut.charPool = expected
+
+            val actual = cut.charPool
+
+            Assertions.assertEquals(expected, actual) {
+                "Setter did not set charpool to $expected, instead was $actual."
+            }
+        }
+    }
+
+    @TestFactory
+    fun generateRandomStringFromCharPoolTest_negativeLengthIllegal() = listOf(
         -1,
         -5,
         -55
@@ -47,7 +68,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun `generateRandomStringFromCharPool generates the empty string for a length of 0`() {
+    fun generateRandomStringFromCharPoolTest_zeroLength() {
         cut.charPool = listOf('A', 'B')
         val expected = ""
 
@@ -59,14 +80,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun `generateRandomStringFromCharPool throws an IllegalArgumentException for an empty char pool`() {
-        Assertions.assertThrows(IllegalArgumentException::class.java) {
-            cut.charPool = listOf()
-        }
-    }
-
-    @Test
-    fun `generateRandomStringFromCharPool uses random generated numbers as expected`() {
+    fun generateRandomStringFromCharPoolTest_Seed1() {
         cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
         cut.random = Random(55)
         val expected = "HBHBIICD"
@@ -79,7 +93,7 @@ internal class RandomGeneratorTest {
     }
 
     @Test
-    fun `generateRandomStringFromCharPool uses random generated numbers as expected with another seed`() {
+    fun generateRandomStringFromCharPoolTest_Seed2(){
         cut.charPool = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')
         cut.random = Random(555)
         val expected = "DFHIBGIC"
