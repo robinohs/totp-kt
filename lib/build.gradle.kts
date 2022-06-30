@@ -1,11 +1,10 @@
 description = ""
 group = "dev.robinohs"
-version = "1.0.4"
+version = "1.0.3"
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
     id("jacoco")
-    //id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
     id("org.sonarqube") version "3.3"
     id("java-library")
     id("maven-publish")
@@ -34,6 +33,10 @@ tasks.jar {
 
 java {
     withSourcesJar()
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 tasks {
