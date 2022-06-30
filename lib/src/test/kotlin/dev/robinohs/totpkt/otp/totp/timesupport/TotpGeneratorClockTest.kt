@@ -29,7 +29,7 @@ internal class TotpGeneratorClockTest {
     }
 
     @Test
-    fun `generateCode produces 6 digit long code by taking timestamps itself`() {
+    fun generateCodeTest_codesMatchAuthenticatorGeneratedCode() {
         val expected = "223710"
 
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115662383), ZoneId.systemDefault())
@@ -58,7 +58,7 @@ internal class TotpGeneratorClockTest {
         "1666314881887",
         "1696114888827",
     )
-    fun `generateCode produces different codes with different secrets for same date`(timestamp: Long) {
+    fun generateCodeTest_differentSecretsHaveDifferentCodes(timestamp: Long) {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
         val actual1 = cut.generateCode(secret)
         val actual2 = cut.generateCode(secret2)
@@ -74,7 +74,7 @@ internal class TotpGeneratorClockTest {
         "10",
         "12",
     )
-    fun `generateCode produces codes of the correct length for changed setting`(expected: Int) {
+    fun generateCodeTest_codeLengthMatchesConfig(expected: Int) {
         cut.codeLength = expected
 
         val actual = cut.generateCode(secret).length
@@ -83,7 +83,7 @@ internal class TotpGeneratorClockTest {
     }
 
     @Test
-    fun `isCodeValid checks codes correctly without time argument`() {
+    fun isCodeValidTest_checksCodesCorrectly() {
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115068732), ZoneId.systemDefault())
         val actual1 = cut.isCodeValid(secret, "196157")
         cut.clock = Clock.fixed(Instant.ofEpochMilli(1656115073318), ZoneId.systemDefault())
