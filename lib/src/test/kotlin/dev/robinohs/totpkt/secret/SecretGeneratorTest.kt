@@ -31,7 +31,7 @@ internal class SecretGeneratorTest {
         "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
         "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
     )
-    fun `generateSecret produces random values and encodes them to valid base32 strings`(
+    fun generateSecretTest_secretAsString(
         length: Int,
         expected: String
     ) {
@@ -49,7 +49,7 @@ internal class SecretGeneratorTest {
         "30, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKC",
         "40, IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSB",
     )
-    fun `generateSecret produces random values and encodes them to valid base32 bytearrays`(
+    fun generateSecretTest_secretAsByteArray(
         length: Int,
         expected: String
     ) {
@@ -68,12 +68,10 @@ internal class SecretGeneratorTest {
         "40",
         "50",
     )
-    fun `generateSecret generates a bytearray and a string and they are the same`(
-        length: Int
-    ) {
-        val generatedSecret = cut.generateSecret(length)
-        val secretAsByteArray = generatedSecret.secretAsByteArray.toString(Charsets.UTF_8)
-        val secretAsString = generatedSecret.secretAsString
+    fun generateSecretTest_byteArrayAndStringAreEqual(length: Int) {
+        val base32Secret = cut.generateSecret(length)
+        val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
+        val secretAsString = base32Secret.secretAsString
 
         assertEquals(secretAsByteArray, secretAsString) {
             "The generated secret as bytearray and as string are equal."
