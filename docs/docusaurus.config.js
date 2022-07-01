@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'TOTP-KT',
   tagline: 'A Kotlin implementation of HOTP (RFC-4226) and TOTP (RFC-6238).',
-  url: 'https://robinohs.github.io/totp-kt',
+  url: 'https://robinohs.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
