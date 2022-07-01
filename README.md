@@ -172,11 +172,11 @@ totpGenerator.calculateTimeslotBeginning()
 If one would like to specify a time:
 ```kotlin
 // with millis, returns millis
-totpGenerator.calculateTimeslotBeginning(1656459878681, clientCode)
+totpGenerator.calculateTimeslotBeginning(1656459878681)
 // with Instant, returns Instant
-totpGenerator.calculateTimeslotBeginning(Instant(), clientCode)
+totpGenerator.calculateTimeslotBeginning(Instant())
 // with Date, returns Date
-totpGenerator.calculateTimeslotBeginning(Date(), clientCode)
+totpGenerator.calculateTimeslotBeginning(Date())
 ```
 #### Method: Remaining time
 Calculates the remaining duration of the time slot in which the actual or given timestamp lies.
