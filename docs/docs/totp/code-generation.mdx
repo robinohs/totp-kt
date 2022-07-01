@@ -1,0 +1,45 @@
+---
+sidebar_position: 2
+---
+
+# Code Generation
+
+This methods can be used to generate a TOTP (Time-Based One-Time Password) code.
+
+## generateCode
+
+### Info
+
+After you created the totpGenerator instance you can generate a one-time password by calling the generateCode method with the secret as an argument.
+Optionally, if you want to specify a specific time and not have the generator to take the current time itself, you can pass a time as an argument.
+
+### Usage
+
+```kotlin
+val secret = some_base32_encoded_secret_as_bytearray
+val code = totpGenerator.generateCode(secret)
+```
+
+With a specific timestamp:
+
+```kotlin
+// with millis
+totpGenerator.generateCode(secret, 1656459878681)
+// with Instant
+totpGenerator.generateCode(secret, Instant())
+// with Date
+totpGenerator.generateCode(secret, Date())
+```
+
+The generated code will be similar to:
+
+```kotlin
+> "563111"
+```
+
+### Arguments
+
+| Argument | Type                | Default | Constraint |
+| -------- | ------------------- | ------- | ---------- |
+| secret   | ByteArray           | -       | Required   |
+| time     | Long, Instant, Date | -       | Optional   |

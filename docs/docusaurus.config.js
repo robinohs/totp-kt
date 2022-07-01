@@ -12,7 +12,7 @@ const config = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/kotlin.png',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -52,7 +52,7 @@ const config = {
         title: 'TOTP-KT',
         logo: {
           alt: 'K',
-          src: 'img/kotlin.png',
+          src: 'img/features_kotlin.svg',
         },
         items: [
           {
@@ -62,7 +62,15 @@ const config = {
             label: 'Documentation',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            type: "docsVersionDropdown",
+            position: 'right',
+          },
+          {
+            type: "localeDropdown",
+            position: 'right',
+          },
+          {
+            href: 'https://github.com/robinohs/totp-kt',
             label: 'GitHub',
             position: 'right',
           },
@@ -95,6 +103,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ['kotlin'],
       },
     }),
 };

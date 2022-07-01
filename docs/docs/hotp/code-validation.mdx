@@ -1,0 +1,31 @@
+---
+sidebar_position: 3
+---
+
+# Code Validation
+
+This methods can be used to validate a token that was send from a client.
+
+## isCodeValid
+
+### Info
+
+This is a helper function to compare a generated code from a given secret and counter with a given code.
+Optionally, you could also use generateCode yourself and compare the resulting string to the client's code.
+
+### Usage
+
+```kotlin
+val secret = some_base32_encoded_secret_as_bytearray
+val counter = some_number
+val clientCode = given_client_code
+totpGenerator.isCodeValid(secret, counter, clientCode)
+```
+
+### Arguments
+
+| Argument   | Type      | Default | Constraint |
+| ---------- | --------- | ------- | ---------- |
+| secret     | ByteArray | -       | Required   |
+| counter    | Long      | -       | Required   |
+| clientCode | String    | -       | Required   |

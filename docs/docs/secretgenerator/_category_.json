@@ -1,0 +1,8 @@
+{
+  "label": "Random Dependent Generators",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "The following categories explain the random generator, as well as the secret generator and the recovery-code generator that depend on the random generator."
+  }
+}

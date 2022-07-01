@@ -1,0 +1,38 @@
+---
+sidebar_position: 1
+---
+
+# Initialize Generator
+
+The random generator is internally used by the secret generator and recovery-code generator to create randomly generated secure strings.
+
+## Create random generator
+
+You can create an instance of the RandomGenerator in the following way:
+
+```kotlin
+val randomGenerator = RandomGenerator()
+```
+
+## Customize properties
+
+It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
+
+#### Random (Dangerous)
+
+The generator accepts any class implementing the java random interface.
+:::danger
+The default used random implementation is java's official secure random implementation and should not be changed unless you know what you are doing!
+:::
+
+#### Charpool (Dangerous)
+
+The char pool specifies the list of characters that can be used to generate the string.
+:::danger
+If the char pool gets too small, the security is weakend. For example a 10-character long password with the default charset of the library has the following properties:
+
+- Combinations: 62^{10} = 8.3929937e^{17}
+- Entropy: log_2(62^{10}) = 59.542
+
+Passwords with a entropy >50 are considered to be secure by many researchers (Greater is always better).
+:::

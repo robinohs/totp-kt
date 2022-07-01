@@ -1,0 +1,82 @@
+---
+sidebar_position: 3
+---
+
+# Code Validation
+
+This methods can be used to validate a token that was send from a client.
+
+## isCodeValid
+
+### Info
+
+There is a helper function to compare a currently generated code with a given code.
+Optionally, you can also use generateCode yourself and compare the resulting string to the client's code.
+
+### Usage
+
+```kotlin
+val secret = some_base32_encoded_secret_as_bytearray
+val clientCode = given_client_code
+totpGenerator.isCodeValid(secret, clientCode)
+```
+
+With a specific timestamp:
+
+```kotlin
+// with millis
+totpGenerator.isCodeValid(secret, 1656459878681, clientCode)
+// with Instant
+totpGenerator.isCodeValid(secret, Instant(), clientCode)
+// with Date
+totpGenerator.isCodeValid(secret, Date(), clientCode)
+```
+
+The method will return a boolean indicating whether the client code is equal to the generated code.
+
+### Arguments
+
+| Argument   | Type                | Default | Constraint |
+| ---------- | ------------------- | ------- | ---------- |
+| secret     | ByteArray           | -       | Required   |
+| time       | Long, Instant, Date | -       | Optional   |
+| clientCode | String              | -       | Required   |
+
+---
+
+## isCodeValidWithTolerance
+
+### Info
+
+Compares a generated code to a given code using a counter derived from the current timestamp and a given secret.
+In addition, the method considers a tolerance and also checks the given code against a number of previous tokens
+equal to the tolerance. Returns true if the given code matches any of these tokens.
+
+### Usage
+
+```kotlin
+val secret = some_base32_encoded_secret_as_bytearray
+val clientCode = given_client_code
+totpGenerator.isCodeValidWithTolerance(secret, clientCode)
+```
+
+With a specific timestamp:
+
+```kotlin
+// with millis
+totpGenerator.isCodeValidWithTolerance(secret, 1656459878681, clientCode)
+// with Instant
+totpGenerator.isCodeValidWithTolerance(secret, Instant(), clientCode)
+// with Date
+totpGenerator.isCodeValidWithTolerance(secret, Date(), clientCode)
+```
+
+The method will return a boolean indicating whether the client code is equal to the generated code or tolerated.
+
+### Arguments
+
+| Argument   | Type                | Default | Constraint |
+| ---------- | ------------------- | ------- | ---------- |
+| secret     | ByteArray           | -       | Required   |
+| time       | Long, Instant, Date | -       | Optional   |
+| clientCode | String              | -       | Required   |

@@ -1,0 +1,85 @@
+---
+sidebar_position: 1
+---
+
+# Initialize Generator
+
+Documentation for creating an instance of the Time-Based One-Time Password Generator.
+
+## Create Instance
+
+You can create an instance of the TotpGenerator in the following way:
+
+```kotlin
+val totpGenerator = TotpGenerator()
+```
+
+## Spring Boot
+
+Instead of creating a new instance of a generator each time a token is checked, it is also possible to create a bean within Spring.
+This allows to configure the generator once and this configuration is maintained each time the bean is injected into a component.
+
+```kotlin
+@Bean
+fun totpGenerator(): TotpGenerator {
+    val generator = TotpGenerator()
+    generator.codeLength = 6
+    generator.timePeriod = Duration.ofSeconds(30)
+    return generator
+}
+```
+
+This bean can then be injected in the constructor of any class marked with @Component (@Service, ...).
+
+```kotlin
+@Component
+class CustomComponent(private val totpGenerator: TotpGenerator) {
+	//...
+}
+```
+
+## Customize properties
+
+It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
+
+### Clock
+
+The clock is the time source for the generator if no time is passed as an argument to the generateCode or validateCode method.
+
+```kotlin
+val totpGenerator = TotpGenerator(clock = Clock.systemUTC())
+// or
+totpGenerator.clock = Clock.systemUTC()
+```
+> For testing purposes, one could assign a **Clock.fixed** which always returns the same timestamp and thus the same TOTP code is generated.
+:::info
+The user's clock and the server's clock need to be in sync for the validation process to work properly.<br/>
+:::
+
+
+### Time period
+
+The time period is the duration of every time step in which the generated code is the same. This is needed as due to delays (e.g., network delay) the server will not generate the code with the same timestamp as the client. As a compromise between security and usability the default time step is set as 30 seconds.
+
+:::danger Could break logic
+Most authenticator apps, such as those from Microsoft or Google, use a time period of 30 seconds. If you change this duration, they are no longer usable.
+However, remember that that they are widely used before you drop support for them.
+:::
+
+### Tolerance
+
+The tolerance specifies a number of previous tokens that are also accepted as valid tokens in addition to the current valid token.
+
+> A tolerance of one token is set as default. In [RFC6238#5.2](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2) a time step is recommended to compensate for delays such as network delay.
+:::danger Security Risk
+Expanding the tolerance to a very high number, lowers the security significantly.
+:::
+
+### Code length
+
+The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
+
+:::danger Could break logic
+Most authenticator apps, such as those from Microsoft or Google, use a length of 6 digits. If you change this number, they are no longer usable.
+However, remember that that they are widely used before you drop support for them.
+:::

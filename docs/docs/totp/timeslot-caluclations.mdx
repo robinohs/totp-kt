@@ -1,0 +1,47 @@
+---
+sidebar_position: 4
+---
+
+# Timeslot Calculations
+
+The methods described on this page can be used to calculate time slot informations like the time slot beginning or the remaining time.
+
+## calculateTimeslotBeginning
+
+Calculates the start timestamp of the time slot in which the actual or given timestamp lies.
+
+```kotlin
+// takes actual timestamp from clock, returns millis
+totpGenerator.calculateTimeslotBeginning()
+```
+
+If one would like to specify a time:
+
+```kotlin
+// with millis, returns millis
+totpGenerator.calculateTimeslotBeginning(1656459878681)
+// with Instant, returns Instant
+totpGenerator.calculateTimeslotBeginning(Instant())
+// with Date, returns Date
+totpGenerator.calculateTimeslotBeginning(Date())
+```
+
+## calculateRemainingTime
+
+Calculates the remaining time as a Duration of the time slot in which the actual or given timestamp lies.
+
+```kotlin
+// takes actual timestamp from clock
+totpGenerator.calculateRemainingTime()
+```
+
+If one would like to specify a time:
+
+```kotlin
+// with millis
+totpGenerator.calculateRemainingTime(1656459878681)
+// with Instant
+totpGenerator.calculateRemainingTime(Instant())
+// with Date
+totpGenerator.calculateRemainingTime(Date())
+```
