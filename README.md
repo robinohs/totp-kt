@@ -1,6 +1,6 @@
 # totp-kt - Kotlin OTP Library
 
-**CURRENTLY IN ALPHA**
+**CURRENTLY IN ALPHA v2**
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/summary/new_code?id=robinohs_totp-kt)
 
