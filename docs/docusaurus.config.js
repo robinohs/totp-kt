@@ -9,7 +9,7 @@ const config = {
   title: 'TOTP-KT',
   tagline: 'A Kotlin implementation of HOTP (RFC-4226) and TOTP (RFC-6238).',
   url: 'https://robinohs.github.io',
-  baseUrl: '/',
+  baseUrl: '/totp-kt/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/kotlin.png',
