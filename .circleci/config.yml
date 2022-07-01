@@ -5,7 +5,13 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@3.2.3
 
-# Define a job to be invoked later in a workflow.
+commands:
+  check-changed-files-or-halt:
+    parameters:
+      pattern:
+        type: string
+    steps:
+      - run: git show -m HEAD --name-only --pretty="" | egrep -q '<< parameters.pattern >>' || circleci step halt
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
@@ -30,6 +36,8 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
+      - check-changed-files-or-halt:
+          pattern: ^(lib)|(\.circleci)|(.kts)
 
       # Download and cache dependencies
       - restore_cache:
