@@ -4,18 +4,22 @@ sidebar_position: 4
 
 # Timeslot Calculations
 
-The methods described on this page can be used to calculate time slot informations like the time slot beginning or the remaining time.
+The methods described on this page can be used to calculate time slot informations like the beginning or remaining time of a timeslot.
 
 ## calculateTimeslotBeginning
 
+### Info
+
 Calculates the start timestamp of the time slot in which the actual or given timestamp lies.
 
+### Usage
+
 ```kotlin
-// takes actual timestamp from clock, returns millis
+// measures current time of the clock, returns millis
 totpGenerator.calculateTimeslotBeginning()
 ```
 
-If one would like to specify a time:
+With a specific timestamp:
 
 ```kotlin
 // with millis, returns millis
@@ -26,16 +30,28 @@ totpGenerator.calculateTimeslotBeginning(Instant())
 totpGenerator.calculateTimeslotBeginning(Date())
 ```
 
+### Arguments
+
+| Argument | Type                | Default | Constraint |
+| -------- | ------------------- | ------- | ---------- |
+| time     | Long, Instant, Date | -       | Optional   |
+
+---
+
 ## calculateRemainingTime
+
+### Info
 
 Calculates the remaining time as a Duration of the time slot in which the actual or given timestamp lies.
 
+### Usage
+
 ```kotlin
-// takes actual timestamp from clock
+// measures current time of the clock, returns millis
 totpGenerator.calculateRemainingTime()
 ```
 
-If one would like to specify a time:
+With a specific timestamp:
 
 ```kotlin
 // with millis
@@ -45,3 +61,9 @@ totpGenerator.calculateRemainingTime(Instant())
 // with Date
 totpGenerator.calculateRemainingTime(Date())
 ```
+
+### Arguments
+
+| Argument | Type                | Default | Constraint |
+| -------- | ------------------- | ------- | ---------- |
+| time     | Long, Instant, Date | -       | Optional   |
