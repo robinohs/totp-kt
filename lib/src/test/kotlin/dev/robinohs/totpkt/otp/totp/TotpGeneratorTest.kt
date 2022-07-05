@@ -3,6 +3,7 @@ package dev.robinohs.totpkt.otp.totp
 import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
 import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
 import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
+import org.apache.commons.codec.binary.Base32
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
@@ -17,6 +18,7 @@ import java.time.Duration
 internal class TotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
     private val secret2 = "BJAU CQSB IJAU EQKB".toByteArray()
+    private val secretSpecification = Base32().encode("12345678901234567890".toByteArray())
 
     private lateinit var cut: TotpGenerator
 
@@ -330,5 +332,24 @@ internal class TotpGeneratorTest {
         val actual = cut.calculateRemainingTime(timestamp)
 
         Assertions.assertEquals(expected, actual) { "Time slot beginning was expected one. $expected not equal to $actual." }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "59, 94287082",
+        "1111111109, 07081804",
+        "1111111111, 14050471",
+        "1234567890, 89005924",
+        "2000000000, 69279037",
+        "20000000000, 65353130",
+    )
+    fun testSpecificationDefinedCodesSha1(seconds: Long, expected: String) {
+        cut.codeLength = 8
+
+        val actual = cut.generateCode(secretSpecification, seconds * 1000)
+
+        Assertions.assertEquals(expected, actual) {
+            "Codes should be the same for the given arguments."
+        }
     }
 }
