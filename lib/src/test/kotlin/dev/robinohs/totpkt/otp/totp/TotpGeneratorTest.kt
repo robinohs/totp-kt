@@ -3,7 +3,7 @@ package dev.robinohs.totpkt.otp.totp
 import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
 import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
 import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
-import org.apache.commons.codec.binary.Base32
+import dev.robinohs.totpkt.otp.HashAlgorithm
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
@@ -18,7 +18,6 @@ import java.time.Duration
 internal class TotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
     private val secret2 = "BJAU CQSB IJAU EQKB".toByteArray()
-    private val secretSpecification = Base32().encode("12345678901234567890".toByteArray())
 
     private lateinit var cut: TotpGenerator
 
@@ -314,7 +313,10 @@ internal class TotpGeneratorTest {
     fun testCalculateTimeslotBeginning(timestamp: Long, expected: Long) {
         val actual = cut.calculateTimeslotBeginning(timestamp)
 
-        Assertions.assertEquals(expected, actual) { "Time slot beginning was expected one. $expected not equal to $actual." }
+        Assertions.assertEquals(
+            expected,
+            actual
+        ) { "Time slot beginning was expected one. $expected not equal to $actual." }
     }
 
     @ParameterizedTest
@@ -331,22 +333,72 @@ internal class TotpGeneratorTest {
 
         val actual = cut.calculateRemainingTime(timestamp)
 
-        Assertions.assertEquals(expected, actual) { "Time slot beginning was expected one. $expected not equal to $actual." }
+        Assertions.assertEquals(
+            expected,
+            actual
+        ) { "Time slot beginning was expected one. $expected not equal to $actual." }
     }
 
     @ParameterizedTest
     @CsvSource(
-        "59, 94287082",
-        "1111111109, 07081804",
-        "1111111111, 14050471",
-        "1234567890, 89005924",
-        "2000000000, 69279037",
-        "20000000000, 65353130",
+        "59000, 94287082",
+        "1111111109000, 07081804",
+        "1111111111000, 14050471",
+        "1234567890000, 89005924",
+        "2000000000000, 69279037",
+        "20000000000000, 65353130",
     )
-    fun testSpecificationDefinedCodesSha1(seconds: Long, expected: String) {
+    fun testSpecificationDefinedCodesSha1(millis: Long, expected: String) {
+        cut.algorithm = HashAlgorithm.SHA1
         cut.codeLength = 8
 
-        val actual = cut.generateCode(secretSpecification, seconds * 1000)
+        // 12345678901234567890 encoded to base32
+        val actual = cut.generateCode("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ".toByteArray(), millis)
+
+        Assertions.assertEquals(expected, actual) {
+            "Codes should be the same for the given arguments."
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "59000, 46119246",
+        "1111111109000, 68084774",
+        "1111111111000, 67062674",
+        "1234567890000, 91819424",
+        "2000000000000, 90698825",
+        "20000000000000, 77737706",
+    )
+    fun testSpecificationDefinedCodesSha256(millis: Long, expected: String) {
+        cut.algorithm = HashAlgorithm.SHA256
+        cut.codeLength = 8
+
+        // 12345678901234567890123456789012 encoded to base32
+        val actual = cut.generateCode("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA====".toByteArray(), millis)
+
+        Assertions.assertEquals(expected, actual) {
+            "Codes should be the same for the given arguments."
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "59000, 90693936",
+        "1111111109000, 25091201",
+        "1111111111000, 99943326",
+        "1234567890000, 93441116",
+        "2000000000000, 38618901",
+        "20000000000000, 47863826",
+    )
+    fun testSpecificationDefinedCodesSha512(millis: Long, expected: String) {
+        cut.algorithm = HashAlgorithm.SHA512
+        cut.codeLength = 8
+
+        // 1234567890123456789012345678901234567890123456789012345678901234 encoded to base32
+        val actual = cut.generateCode(
+            "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA=".toByteArray(),
+            millis
+        )
 
         Assertions.assertEquals(expected, actual) {
             "Codes should be the same for the given arguments."

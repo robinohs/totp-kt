@@ -1,5 +1,6 @@
 package dev.robinohs.totpkt.otp.totp
 
+import dev.robinohs.totpkt.otp.HashAlgorithm
 import dev.robinohs.totpkt.otp.hotp.HotpGenerator
 import java.time.Clock
 import java.time.Duration
@@ -10,11 +11,15 @@ import java.time.Duration
  * @since : 1.0.0
  */
 class TotpGenerator(
+    override var algorithm: HashAlgorithm = HashAlgorithm.SHA1,
     codeLength: Int = 6,
     timePeriod: Duration = Duration.ofSeconds(30),
     tolerance: Int = 1,
     var clock: Clock = Clock.systemUTC(),
-) : HotpGenerator(codeLength) {
+) : HotpGenerator(
+    algorithm = algorithm,
+    codeLength = codeLength
+) {
 
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }

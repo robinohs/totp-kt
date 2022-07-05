@@ -1,9 +1,9 @@
 package dev.robinohs.totpkt.otp.hotp
 
+import dev.robinohs.totpkt.otp.HashAlgorithm
 import dev.robinohs.totpkt.otp.OtpGenerator
 import org.apache.commons.codec.binary.Base32
 import java.nio.ByteBuffer
-import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 import kotlin.math.pow
@@ -16,7 +16,10 @@ import kotlin.math.pow
  * @created : 24.06.2022
  * @since : 1.0.0
  */
-open class HotpGenerator(codeLength: Int = 6) : OtpGenerator {
+open class HotpGenerator(
+    open var algorithm: HashAlgorithm = HashAlgorithm.SHA1,
+    codeLength: Int = 6
+) : OtpGenerator {
 
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }
@@ -45,7 +48,7 @@ open class HotpGenerator(codeLength: Int = 6) : OtpGenerator {
 
     private fun generateHash(secret: ByteArray, payload: ByteArray): ByteArray {
         val key = Base32().decode(secret)
-        val mac = Mac.getInstance("HmacSHA1")
+        val mac = algorithm.getMacInstance()
         mac.init(SecretKeySpec(key, "RAW"))
         return mac.doFinal(payload)
     }
