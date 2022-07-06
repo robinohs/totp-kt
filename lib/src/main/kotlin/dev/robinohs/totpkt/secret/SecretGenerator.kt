@@ -2,6 +2,7 @@ package dev.robinohs.totpkt.secret
 
 import dev.robinohs.totpkt.random.RandomGenerator
 import org.apache.commons.codec.binary.Base32
+import dev.robinohs.totpkt.otp.HashAlgorithm
 
 /**
  * @author : Robin Ohs
@@ -21,4 +22,12 @@ class SecretGenerator(var randomGenerator: RandomGenerator = RandomGenerator()) 
         val secretAsString = Base32().encodeAsString(plainSecret)
         return Base32Secret(secretAsString = secretAsString, secretAsByteArray = secretAsByteArray)
     }
+
+    /**
+     * Generates a secure random secret for a given [HashAlgorithm] and converts it into Base32 encoding.
+     *
+     * @param algorithm the algorithm which preferred key size is taken as length.
+     * @return the secret that can be used in Authenticator apps. E.g., Google Authenticator, Microsoft Authenticator...
+     */
+    fun generateSecret(algorithm: HashAlgorithm): Base32Secret = generateSecret(algorithm.keySize)
 }
