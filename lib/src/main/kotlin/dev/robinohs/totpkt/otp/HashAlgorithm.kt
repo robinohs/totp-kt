@@ -13,7 +13,7 @@ enum class HashAlgorithm(private val algName: String, val keySize: Int) {
     SHA512("HmacSHA512", 64);
 
     /**
-     * Returns a new [Mac] instance of the [HashAlgorithm].
+     * @return A new [Mac] instance of the [HashAlgorithm].
      */
     fun getMacInstance(): Mac = Mac.getInstance(algName)
 }
