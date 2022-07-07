@@ -14,9 +14,11 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <p className="hero__subtitle">
-          Validate <b>Authenticator codes</b> in your <b>backend</b>.
-        </p>
+        <ul className="hero__subtitle">
+          <li>Add <b>2-factor authentication</b> to your <b>backend</b></li>
+          <li>Pre-configured for <b>Google Authenticator</b>.</li>
+          <li>Build your own <b>Authenticator app</b>.</li>
+        </ul>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"

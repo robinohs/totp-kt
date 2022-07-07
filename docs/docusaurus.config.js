@@ -78,26 +78,6 @@ const config = {
       },
       footer: {
         style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: 'docs/intro',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/robinohs/totp-kt',
-              },
-            ],
-          },
-        ],
         copyright: `Made in 🇩🇪 by Robin Ohs.`,
       },
       prism: {

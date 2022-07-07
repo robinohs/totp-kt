@@ -24,6 +24,7 @@ This allows to configure the generator once and this configuration is maintained
 fun totpGenerator(): TotpGenerator {
     val generator = TotpGenerator()
     generator.codeLength = 6
+    generator.algorithm = HashAlgorithm.SHA1
     generator.timePeriod = Duration.ofSeconds(30)
     return generator
 }
@@ -73,6 +74,15 @@ The tolerance specifies a number of previous tokens that are also accepted as va
 > A tolerance of one token is set as default. In [RFC6238#5.2](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2) a time step is recommended to compensate for delays such as network delay.
 :::danger Security Risk
 Expanding the tolerance to a very high number, lowers the security significantly.
+:::
+
+### Algorithm
+
+The algorithm specifies the Hashing algorithm used to generate the 2-factor codes.
+
+:::danger Could break logic
+Most authenticator apps, such as those from Microsoft or Google, use SHA1 (although it is no longer considered secure).
+If you change the algorithm, the authentication app must also support it, or it cannot be used.
 :::
 
 ### Code length
