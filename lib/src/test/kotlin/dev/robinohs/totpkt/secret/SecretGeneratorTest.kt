@@ -1,5 +1,6 @@
 package dev.robinohs.totpkt.secret
 
+import dev.robinohs.totpkt.otp.HashAlgorithm
 import dev.robinohs.totpkt.random.RandomGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -88,6 +89,72 @@ internal class SecretGeneratorTest {
     )
     fun testGenerateSecret_byteArrayAndStringAreEqual(length: Int) {
         val base32Secret = cut.generateSecret(length)
+        val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
+        val secretAsString = base32Secret.secretAsString
+
+        assertEquals(secretAsByteArray, secretAsString) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha1Algorithm() {
+        val expected = "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSC"
+
+        val (actual, _) = cut.generateSecret(HashAlgorithm.SHA1)
+
+        assertEquals(expected, actual) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha1AlgorithmEqual() {
+        val base32Secret = cut.generateSecret(HashAlgorithm.SHA1)
+        val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
+        val secretAsString = base32Secret.secretAsString
+
+        assertEquals(secretAsByteArray, secretAsString) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha256Algorithm() {
+        val expected = "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBA===="
+
+        val (actual, _) = cut.generateSecret(HashAlgorithm.SHA256)
+
+        assertEquals(expected, actual) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha256AlgorithmEqual() {
+        val base32Secret = cut.generateSecret(HashAlgorithm.SHA256)
+        val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
+        val secretAsString = base32Secret.secretAsString
+
+        assertEquals(secretAsByteArray, secretAsString) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha512Algorithm() {
+        val expected = "IJAUCQSBIJAUEQKBIJBECQKCIJAUCQSCIJAUCQKCIFAUCQKCIJBEEQKBIJAUCQSBIJAUCQSBIFBEEQKBIFBECQKBIFAUEQSCIFBECQI="
+
+        val (actual, _) = cut.generateSecret(HashAlgorithm.SHA512)
+
+        assertEquals(expected, actual) {
+            "The generated secret as bytearray and as string are equal."
+        }
+    }
+
+    @Test
+    fun testGenerateSecret_sha512AlgorithmEqual() {
+        val base32Secret = cut.generateSecret(HashAlgorithm.SHA512)
         val secretAsByteArray = base32Secret.secretAsByteArray.toString(Charsets.UTF_8)
         val secretAsString = base32Secret.secretAsString
 

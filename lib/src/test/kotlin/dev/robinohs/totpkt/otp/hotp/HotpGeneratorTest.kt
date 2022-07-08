@@ -3,8 +3,11 @@ package dev.robinohs.totpkt.otp.hotp
 import TestMessageConstants.CODE_SHOULD_BE_VALID_BUT_WAS_NOT
 import TestMessageConstants.CODE_SHOULD_NOT_BE_VALID_BUT_WAS
 import TestMessageConstants.CODE_WAS_NOT_THE_EXPECTED_ONE
+import org.apache.commons.codec.binary.Base32
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 /**
  * @author : Robin Ohs
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.function.Executable
 internal class HotpGeneratorTest {
     private val secret = "IJAU CQSB IJAU EQKB".toByteArray()
     private val secret2 = "BJAU CQSB IJAU EQKB".toByteArray()
+    private val secretSpecification = Base32().encode("12345678901234567890".toByteArray())
     private lateinit var cut: HotpGenerator
 
     @BeforeEach
@@ -96,6 +100,27 @@ internal class HotpGeneratorTest {
             Executable { Assertions.assertTrue(actual1) { CODE_SHOULD_BE_VALID_BUT_WAS_NOT } },
             Executable { Assertions.assertFalse(actual2) { CODE_SHOULD_NOT_BE_VALID_BUT_WAS } },
         )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "0, 755224",
+        "1, 287082",
+        "2, 359152",
+        "3, 969429",
+        "4, 338314",
+        "5, 254676",
+        "6, 287922",
+        "7, 162583",
+        "8, 399871",
+        "9, 520489"
+    )
+    fun testSpecificationDefinedCodes(counter: Long, expected: String) {
+        val actual = cut.generateCode(secretSpecification, counter)
+
+        Assertions.assertEquals(expected, actual) {
+            "Codes should be the same for the given arguments."
+        }
     }
 
 }
