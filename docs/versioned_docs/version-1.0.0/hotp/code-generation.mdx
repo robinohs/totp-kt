@@ -1,0 +1,34 @@
+---
+sidebar_position: 2
+---
+
+# Code Generation
+
+After you created the hotpGenerator instance you can generate a one-time password by calling the generatore code method with the secret and the counter as arguments.
+
+## generateCode
+
+### Info
+
+Generates a code with the given secret and counter. The counter needs to be in sync between the client and the server.
+
+### Usage
+
+```kotlin
+val secret = some_base32_encoded_secret_as_bytearray
+val counter = some_number
+val code = hotpGenerator.generateCode(secret, counter)
+```
+
+The generated code will be similar to:
+
+```kotlin
+> "563111"
+```
+
+### Arguments
+
+| Argument | Type      | Default | Constraint |
+| -------- | --------- | ------- | ---------- |
+| secret   | ByteArray | -       | Required   |
+| counter  | Long      | -       | Required   |

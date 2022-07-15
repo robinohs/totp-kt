@@ -1,0 +1,61 @@
+---
+sidebar_position: 1
+---
+
+# Initialize Generator
+
+Documentation for creating an instance of the HMAC-Based One-Time Password Generator.
+
+## Create Instance
+
+You can create an instance of the HotpGenerator in the following way:
+
+```kotlin
+val hotpGenerator = HotpGenerator()
+```
+
+## Spring Boot
+
+Instead of creating a new instance of a generator each time a token is checked, it is also possible to create a bean within Spring.
+This allows to configure the generator once and this configuration is maintained each time the bean is injected into a component.
+
+```kotlin
+@Bean
+fun hotpGenerator(): HotpGenerator {
+    val generator = HotpGenerator()
+    generator.codeLength = 6
+    generator.algorithm = HashAlgorithm.SHA1
+    return generator
+}
+```
+
+This bean can then be injected in the constructor of any class marked with @Component (@Service, ...).
+
+```kotlin
+@Component
+class CustomComponent(private val hotpGenerator: HotpGenerator) {
+	//...
+}
+```
+
+## Customize properties
+
+It is possible to customize the properties of the generator, either by setters or applying them in the constructor.
+
+### Algorithm
+
+The algorithm specifies the Hashing algorithm used to generate the 2-factor codes.
+
+:::danger Could break logic
+Most authenticator apps, such as those from Microsoft or Google, use SHA1 (although it is no longer considered secure).
+If you change the algorithm, the authentication app must also support it, or it cannot be used.
+:::
+
+### Code length
+
+The code length specifies how long a generated code will be. If the code length is changed, it is necessary that the user's authenticator app supports this as well.
+
+:::danger Could break logic
+Most authenticator apps, such as those from Microsoft or Google, use a length of 6 digits. If you change this number, they are no longer usable.
+However, remember that that they are widely used before you drop support for them.
+:::

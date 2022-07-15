@@ -1,0 +1,31 @@
+---
+sidebar_position: 2
+---
+
+# Generate Random Values
+
+This generator can be used to create random values. Other generators rely on the random generator methods to generate secrets.
+
+## generateRandomStringFromCharPool
+
+### Info
+
+Generates a string with random characters from the character pool. You can specify the desired length.
+
+### Usage
+
+```kotlin
+randomGenerator.generateRandomStringFromCharPool(length = 7)
+```
+
+The generated string will look like this:
+
+```kotlin
+> Ab22dcz
+```
+
+### Arguments
+
+| Argument | Type | Default | Constraint |
+| -------- | ---- | ------- | ---------- |
+| length   | Int  | 7       | >= 0       |

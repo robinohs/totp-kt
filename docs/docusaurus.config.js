@@ -66,10 +66,6 @@ const config = {
             position: 'right',
           },
           {
-            type: "localeDropdown",
-            position: 'right',
-          },
-          {
             href: 'https://github.com/robinohs/totp-kt',
             label: 'GitHub',
             position: 'right',
