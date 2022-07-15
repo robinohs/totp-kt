@@ -22,7 +22,7 @@ Add the dependency:
 ```kotlin
 //build.gradle.kts
 dependencies {
-  implementation("com.github.robinohs:totp-kt:v2.0.0-alpha")
+  implementation("com.github.robinohs:totp-kt:v1.0.0")
 }
 ```
 #### Maven
@@ -42,7 +42,7 @@ Add the dependency:
 <dependency>
   <groupId>com.github.robinohs</groupId>
     <artifactId>totp-kt</artifactId>
-    <version>v2.0.0-alpha</version>
+    <version>v1.0.0</version>
 </dependency>
 ```
 #### Gradle
@@ -60,6 +60,6 @@ Add the dependency:
 ```groovy
 //build.gradle
 dependencies {
-  implementation 'com.github.robinohs:totp-kt:v2.0.0-alpha'
+  implementation 'com.github.robinohs:totp-kt:v1.0.0'
 }
 ```
