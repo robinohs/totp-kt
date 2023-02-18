@@ -24,7 +24,7 @@ class TotpGenerator(
     init {
         require(codeLength >= 0) { "Code length must be >= 0." }
         require(timePeriod.toMillis() >= 1) { "Time period must be be >= 1." }
-        require(tolerance >= 0) { "Tolerance must be be >= 1." }
+        require(tolerance >= 0) { "Tolerance must be be >= 0." }
     }
 
     override var codeLength = codeLength
