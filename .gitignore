@@ -8,3 +8,5 @@ bin
 
 # Igore IntelliJ
 .idea
+
+docs/node_modules
