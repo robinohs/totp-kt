@@ -6,9 +6,37 @@ sidebar_position: 1
 
 ## Installation
 
-> Only Jitpack is supported in the alpha phase.
+### Maven
+
+#### Kotlin DSL
+Add the dependency:
+```kotlin
+//build.gradle.kts
+dependencies {
+  implementation("dev.robinohs:totp-kt:v1.0.1")
+}
+```
+#### Maven
+Add the dependency:
+```xml
+<!--pom.xml-->
+<dependency>
+    <groupId>dev.robinohs</groupId>
+    <artifactId>totp-kt</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+#### Gradle
+Add the dependency:
+```groovy
+//build.gradle
+dependencies {
+  implementation 'dev.robinohs:totp-kt:v1.0.1'
+}
+```
 
 ### Jitpack
+
 #### Kotlin DSL
 Add Jitpack to repositories:
 ```kotlin
@@ -22,7 +50,7 @@ Add the dependency:
 ```kotlin
 //build.gradle.kts
 dependencies {
-  implementation("com.github.robinohs:totp-kt:v1.0.0")
+  implementation("com.github.robinohs:totp-kt:v1.0.1")
 }
 ```
 #### Maven
@@ -42,7 +70,7 @@ Add the dependency:
 <dependency>
   <groupId>com.github.robinohs</groupId>
     <artifactId>totp-kt</artifactId>
-    <version>v1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 #### Gradle
@@ -60,6 +88,6 @@ Add the dependency:
 ```groovy
 //build.gradle
 dependencies {
-  implementation 'com.github.robinohs:totp-kt:v1.0.0'
+  implementation 'com.github.robinohs:totp-kt:v1.0.1'
 }
 ```
