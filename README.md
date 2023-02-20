@@ -14,23 +14,54 @@ Enables the developer to:
 
 # Navigation
  - [Installation](#installation)
-	- [Jitpack](#jitpack)
-		- [Kotlin DSL](#kotlin-dsl)
-		- [Maven](#maven)
-		- [Gradle](#gradle)
+   - [Maven](#maven) 
+     - [Kotlin DSL](#kotlin-dsl)
+     - [Maven](#maven)
+     - [Gradle](#gradle) 
+   - [Jitpack](#jitpack)
+      - [Kotlin DSL](#kotlin-dsl)
+      - [Maven](#maven)
+      - [Gradle](#gradle)
  - [Usage](#usage)
     - [TOTP (Time-based One-Time Password)](#totp-time-based-one-time-password)
     - [HOTP (HMAC-based One-Time Password)](#hotp-hmac-based-one-time-password)
     - [Secret generator](#secret-generator)
     - [Recovery-Code generator](#recovery-code-generator)
     - [Random Generator](#random-generator)
-  - [Spring Boot](#spring-boot)
-  - [License](#license)
+ - [Spring Boot](#spring-boot)
+ - [License](#license)
 
 
 # Installation
 
-> Only Jitpack is supported in the alpha phase.
+## Maven
+
+#### Kotlin DSL
+Add the dependency:
+```kotlin
+//build.gradle.kts
+dependencies {
+  implementation("dev.robinohs:totp-kt:v1.0.1")
+}
+```
+#### Maven
+Add the dependency:
+```xml
+<!--pom.xml-->
+<dependency>
+    <groupId>dev.robinohs</groupId>
+    <artifactId>totp-kt</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+#### Gradle
+Add the dependency:
+```groovy
+//build.gradle
+dependencies {
+  implementation 'dev.robinohs:totp-kt:v1.0.1'
+}
+```
 
 ## Jitpack
 If you are using Jitpack as a repository, you can follow one of the following sections to install using with your favorite package manager such as gradle or maven.
@@ -48,7 +79,7 @@ Add the dependency:
 ```kotlin
 //build.gradle.kts
 dependencies {
-  implementation("com.github.robinohs:totp-kt:v1.0.0")
+  implementation("com.github.robinohs:totp-kt:v1.0.1")
 }
 ```
 #### Maven
@@ -68,7 +99,7 @@ Add the dependency:
 <dependency>
   <groupId>com.github.robinohs</groupId>
     <artifactId>totp-kt</artifactId>
-    <version>v1.0.0</version>
+    <version>v1.0.1</version>
 </dependency>
 ```
 #### Gradle
@@ -86,7 +117,7 @@ Add the dependency:
 ```groovy
 //build.gradle
 dependencies {
-  implementation 'com.github.robinohs:totp-kt:v1.0.0'
+  implementation 'com.github.robinohs:totp-kt:v1.0.1'
 }
 ```
 # Usage

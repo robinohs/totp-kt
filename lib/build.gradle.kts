@@ -1,6 +1,6 @@
 description = ""
 group = "dev.robinohs"
-version = "1.0.1-SNAPSHOT"
+version = "1.0.1"
 
 val sonatypeUsername: String? = System.getenv("SONATYPE_USERNAME")
 val sonatypePassword: String? = System.getenv("SONATYPE_PASSWORD")
